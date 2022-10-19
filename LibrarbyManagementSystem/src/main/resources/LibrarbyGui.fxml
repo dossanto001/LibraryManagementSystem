@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
+  All rights reserved. Use is subject to license terms.
+
+  This file is available and licensed under the following license:
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the distribution.
+  - Neither the name of Oracle Corporation nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="498.0" prefWidth="797.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="swt.hse.de.JfxConnector">
+  <children>
+    <MenuBar prefHeight="18.0" prefWidth="649.0" VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="File">
+          <items>
+            <MenuItem mnemonicParsing="false" text="New" />
+            <MenuItem mnemonicParsing="false" text="Open…" />
+            <Menu mnemonicParsing="false" text="Open Recent" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Close" />
+            <MenuItem mnemonicParsing="false" text="Save" />
+            <MenuItem mnemonicParsing="false" text="Save As…" />
+            <MenuItem mnemonicParsing="false" text="Revert" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Preferences…" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Quit" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Edit">
+          <items>
+            <MenuItem mnemonicParsing="false" text="Undo" />
+            <MenuItem mnemonicParsing="false" text="Redo" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Cut" />
+            <MenuItem mnemonicParsing="false" text="Copy" />
+            <MenuItem mnemonicParsing="false" text="Paste" />
+            <MenuItem mnemonicParsing="false" text="Delete" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Select All" />
+            <MenuItem mnemonicParsing="false" text="Unselect All" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+          <items>
+            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <children>
+            <TextField fx:id="nameOfBook" layoutX="271.0" layoutY="72.0" promptText="Booktitle" />
+            <TextArea fx:id="searchBook" editable="false" layoutX="14.0" layoutY="17.0" prefHeight="452.0" prefWidth="217.0" promptText="Books" />
+            <TextField fx:id="author" layoutX="599.0" layoutY="142.0" promptText="author" />
+            <TextField fx:id="publisher" layoutX="599.0" layoutY="202.0" promptText="publisher" />
+            <TextField fx:id="edition" layoutX="600.0" layoutY="255.0" promptText="edition" />
+            <TextField fx:id="numberInStock" layoutX="600.0" layoutY="312.0" promptText="number in stock" />
+            <TextField fx:id="year" layoutX="600.0" layoutY="368.0" promptText="year" />
+            <TextField fx:id="nameOfCustomer" layoutX="271.0" layoutY="140.0" prefHeight="25.0" prefWidth="132.0" promptText="name of Customer" />
+            <TextField fx:id="amount" layoutX="434.0" layoutY="140.0" prefHeight="25.0" prefWidth="132.0" promptText="amount" />
+            <Button fx:id="deleteBookButton" layoutX="446.0" layoutY="421.0" mnemonicParsing="false" onAction="#deleteBookButton" prefHeight="37.0" prefWidth="119.0" text="Delete" />
+            <Button fx:id="borrowBookButton" layoutX="277.0" layoutY="422.0" mnemonicParsing="false" onAction="#borrowBookButton" prefHeight="35.0" prefWidth="113.0" text="Borrow" />
+            <Button fx:id="addBookButton" layoutX="605.0" layoutY="421.0" mnemonicParsing="false" onAction="#addBookButton" prefHeight="37.0" prefWidth="119.0" text="Add new book" />
+            <Line endX="297.0" layoutX="499.0" layoutY="106.0" startX="-241.5" />
+            <Line endX="7.0" endY="373.0" layoutX="411.0" layoutY="107.0" startX="7.0" />
+            <Line endX="20.0" layoutX="568.0" layoutY="106.0" startX="20.0" startY="375.0" />
+            <Line endX="-16.0" endY="-31.0" layoutX="274.0" layoutY="33.0" startX="-16.0" startY="446.0" />
+            <Label layoutX="271.0" layoutY="2.0" prefHeight="25.0" prefWidth="366.0" text="Book entry">
+               <font>
+                  <Font size="29.0" />
+               </font>
+            </Label>
+            <Button fx:id="returnBookButton" layoutX="277.0" layoutY="381.0" mnemonicParsing="false" onAction="#returnBookButton" prefHeight="35.0" prefWidth="113.0" text="Return book" />
+            <TextField fx:id="rating" layoutX="271.0" layoutY="208.0" prefHeight="25.0" prefWidth="132.0" promptText="rating" />
+            <Label layoutX="271.0" layoutY="118.0" text="Name of Customer" />
+            <Label layoutX="271.0" layoutY="186.0" text="Rating of Customer" />
+            <Label layoutX="434.0" layoutY="118.0" text="Amount of Books" />
+            <Label layoutX="600.0" layoutY="118.0" text="Author" />
+            <Label layoutX="600.0" layoutY="180.0" text="publisher" />
+            <Label layoutX="600.0" layoutY="238.0" text="edition" />
+            <Label layoutX="606.0" layoutY="295.0" text="Number in Stock" textAlignment="CENTER" />
+            <Label layoutX="600.0" layoutY="351.0" text="year" />
+            <Label layoutX="271.0" layoutY="55.0" text="Title of Book" />
+      </children>
+    </AnchorPane>
+  </children>
+</VBox>
