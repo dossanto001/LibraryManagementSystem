@@ -10,13 +10,13 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building version ${parameters.VERSION}'
-                sh './mvn build'
+                sh './pom.xml build'
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing version ${parameters.VERSION}'
-                sh './mvn test'
+                //sh './mvn test'
             }
             //post {
             //    always {
