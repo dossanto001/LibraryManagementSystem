@@ -10,7 +10,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building version ${parameters.VERSION}'
-                sh './mvn package'
+                sh './mvn -B -DskipTests clean package'
             }
         }
         stage('Test') {
