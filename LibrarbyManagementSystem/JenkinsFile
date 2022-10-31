@@ -13,7 +13,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building version ${parameters.VERSION}'
-                sh 'mvn clean -f ("*tree/main/LibrarbyManagementSystem/pom.xml")'
+                sh 'mvn clean package'
             }
         }
         stage('Test') {
