@@ -14,7 +14,7 @@ pipeline {
             steps {
                 echo 'Building version ${parameters.VERSION}'
                 sh 'mvn -f path/to/pom.xml clean install'
-                //sh 'mvn clean package'
+
             }
         }
         stage('Test') {
@@ -26,6 +26,7 @@ pipeline {
             //    always {
             //        junit "build/reports/tests/**/*.xml"
             //    }
+            //    sh 'mvn clean package'
             //}
         }
     }
