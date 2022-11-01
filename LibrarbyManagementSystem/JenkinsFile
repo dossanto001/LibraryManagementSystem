@@ -1,9 +1,9 @@
 pipeline {
 
     agent any
-      tools {
+    tools {
         maven '3.8.5'
-      }
+    }
 
     parameters {
         string(name: 'VERSION', defaultValue: '1.0.0', description: 'Build Version')
@@ -12,14 +12,14 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building version ${parameters.VERSION}'
+                echo "Building version ${parameters.VERSION}"
                 sh 'mvn  -e -f LibrarbyManagementSystem/pom.xml clean javafx:run'
 
             }
         }
         stage('Test') {
             steps {
-                echo 'Testing version ${parameters.VERSION}'
+                echo "Testing version ${parameters.VERSION}"
                 //sh './mvn test'
             }
             //post {
