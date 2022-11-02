@@ -7,8 +7,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!--maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target-->
+		<maven.compiler.source>19</maven.compiler.source>
+		<maven.compiler.target>19</maven.compiler.target>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -60,14 +60,15 @@
 				<groupId>org.openjfx</groupId>
 				<artifactId>javafx-maven-plugin</artifactId>
 				<version>0.0.6</version>
-				<executions>
+				<!--executions>
 					<execution>
 						<id>default-cli</id>
-						<configuration>
-							<mainClass>swt.hse.de.App</mainClass>
-						</configuration>
+
 					</execution>
-				</executions>
+				</executions-->
+				<configuration>
+					<mainClass>swt.hse.de.App</mainClass>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
