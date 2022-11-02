@@ -12,9 +12,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo "Building version ${parameters.VERSION}"
-                sh 'mvn  -e -f LibrarbyManagementSystem/pom.xml clean javafx:run'
-
+                echo 'Building version ${parameters.VERSION}'
+                sh 'mvn  -X -f LibrarbyManagementSystem/pom.xml clean javafx:run'
             }
         }
         stage('Test') {
