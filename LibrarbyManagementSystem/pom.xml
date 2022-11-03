@@ -67,11 +67,6 @@
 				<groupId>org.openjfx</groupId>
 				<artifactId>javafx-maven-plugin</artifactId>
 				<version>0.0.6</version>
-				<configuration>
-					<executable>
-						/usr/java/jdk1.8.0_231-amd64
-					</executable>
-<!-- 				</configuration>
 				<!--executions>
 					<execution>
 						<id>default-cli</id>
@@ -79,7 +74,9 @@
 					</execution>
 				</executions-->
 				<configuration> 
---> 
+					<executable>
+						/usr/java/jdk1.8.0_231-amd64
+					</executable>
 					<mainClass>swt.hse.de.App</mainClass>
 				</configuration>
 			</plugin>
