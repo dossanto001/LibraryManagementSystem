@@ -71,14 +71,14 @@
 					<executable>
 						/usr/java/jdk1.8.0_231-amd64
 					</executable>
-				</configuration>
+<!-- 				</configuration>
 				<!--executions>
 					<execution>
 						<id>default-cli</id>
 
 					</execution>
 				</executions-->
-				<configuration>
+				<configuration> -->
 					<mainClass>swt.hse.de.App</mainClass>
 				</configuration>
 			</plugin>
