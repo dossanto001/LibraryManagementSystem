@@ -78,7 +78,8 @@
 
 					</execution>
 				</executions-->
-				<configuration> -->
+				<configuration> 
+--> 
 					<mainClass>swt.hse.de.App</mainClass>
 				</configuration>
 			</plugin>
