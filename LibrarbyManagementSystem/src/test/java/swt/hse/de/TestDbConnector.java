@@ -1,7 +1,6 @@
 package swt.hse.de;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 
 import java.sql.SQLException;
@@ -13,24 +12,54 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class TestDbConnector {
-	
+
 	DbConnector db;
-	
+
 	@Before
 	public void setup() {
 		db = new DbConnector();
 	}
-	
-	@Test
+
 	public void testConnectionFail() throws SQLException {
-		assertEquals(null, db.createConnectionToDatabase("WrongUserName", "postgrespw")); 
+		assertEquals(null, db.createConnectionToDatabase("WrongUserName", "postgrespw"));
 		db.closeConnectionToDatabase();
 	}
-	
+
 	@Test
 	public void testConnectionSuccess() throws SQLException {
-		assertNotEquals(null, db.createConnectionToDatabase("postgres", "postgrespw")); 
+		assertNotEquals(null, db.createConnectionToDatabase("postgres", "postgrespw"));
 		db.closeConnectionToDatabase();
+	}
+
+	@Test
+	public void testCreateBook() throws SQLException {
+		assertEquals(true, db.createBook("newName", "auth", 1222, 2, "pub", 0));
+	}
+
+	@Test
+	public void testCreateExistingBook() throws SQLException {
+		assertEquals(true, db.createBook("name2", "auth", 1222, 2, "pub", 0));
+		assertEquals(true, db.createBook("name2", "auth", 1222, 2, "pub", 1));
+	}
+
+	@Test
+	public void testDeleteBook() throws SQLException {
+		assertEquals(true, db.deleteBook("name", 1));
+	}
+
+	@Test
+	public void testDeleteBookFail() throws SQLException {
+		assertEquals(false, db.deleteBook("no book with this name", 1));
+	}
+
+	@Test
+	public void testBookExistingSuccess() throws SQLException {
+		assertEquals(true, db.bookExisting("name"));
+	}
+
+	@Test
+	public void testBookExistingFail() throws SQLException {
+		assertEquals(false, db.bookExisting("this book does not exist"));
 	}
 
 }
