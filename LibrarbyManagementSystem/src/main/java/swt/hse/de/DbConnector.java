@@ -10,18 +10,18 @@ public class DbConnector {
 
 	private static Connection connection;
 	private Statement statement;
-	private String root = "root", rootPassword = "";
+	private String root = "postgres", rootPassword = "postgrespw";
 	private static ResultSet resSet;
+	public String connectionString;
 
 	public Connection createConnectionToDatabase(String name, String password) {
 		try {
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lms", name, password);
-			System.out.println("Login successful");
+			Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:49153/library", name, password);
+			connectionString = con.toString();
 			return con;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Login failed");
 		return null;
 	}
 
@@ -74,17 +74,21 @@ public class DbConnector {
 		String query = null;
 		Connection connection = createConnectionToDatabase(root, rootPassword);
 		if (bookExisting(title)) {
-			query = "UPDATE library SET (title, author, year, edition, publisher, inStock, bookAvailable, borrowCount, rating) "
+			query = "UPDATE library.books SET (title, author, year, edition, publisher, inStock, bookAvailable, borrowCount, rating) "
 					+ "VALUES ('" + title + "','" + author + "','" + year + "','" + edition + "','" + publisher + "','"
 					+ inStock + "',0 ,0 ,0);";
 		} else {
-			query = "INSERT INTO library (title, author, year, edition, publisher, inStock, bookAvailable, borrowCount, rating) "
+			query = "INSERT INTO library.books (title, author, year, edition, publisher, inStock, bookAvailable, borrowCount, rating) "
 					+ "VALUES ('" + title + "','" + author + "','" + year + "','" + edition + "','" + publisher + "','"
 					+ inStock + "',0 ,0 ,0);";
 		}
 		statement = connection.createStatement();
 		statement.executeUpdate(query);
 		closeConnectionToDatabase();
+	}
+	
+	public void createMultipleBooks(String title, String author, int year, int edition, String publisher, int inStock) {
+		
 	}
 
 	public void borrowBook(String nameOfCustomer, String title) throws SQLException {
@@ -146,7 +150,7 @@ public class DbConnector {
 		Connection connection = createConnectionToDatabase(root, rootPassword);
 		ResultSet res = resSet;
 		statement = connection.createStatement();
-		res = statement.executeQuery("SELECT * FROM library");
+		res = statement.executeQuery("SELECT * FROM library.books");
 		String resultOfQuery = "Book Title\t\tAmount stocked\t\t Rating\n";
 		while (res.next())
 			if (res.getString("title") == name) {
