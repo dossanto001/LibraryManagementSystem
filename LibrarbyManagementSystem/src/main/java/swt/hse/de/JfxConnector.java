@@ -15,6 +15,7 @@ public class JfxConnector {
 	//for goals use "clean javafx:run", then click Apply and after that -> run.
 	
 	DbConnector db = new DbConnector();
+	BorrowTimer bt = new BorrowTimer();
 	
 	@FXML
 	public TextArea booksInStock = new TextArea();
@@ -69,7 +70,8 @@ public class JfxConnector {
 		}
 		else {
 			db.borrowBook(nameOfCustomer.getText(), nameOfBook.getText());
-			JOptionPane.showInternalMessageDialog(null, "Book has been borrowed by " + nameOfCustomer.getText());
+			JOptionPane.showInternalMessageDialog(null, "Book has been borrowed by " + nameOfCustomer.getText() +" book must be returned by " +
+					bt.borrowForTime(7));
 		}
 		searchBook.setText(db.printBookList());
 		return;

@@ -16,7 +16,7 @@ public class DbConnector {
 
 	public Connection createConnectionToDatabase(String name, String password) {
 		try {
-			Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:49153/library", name, password);
+			Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:49154/library", name, password);
 			connectionString = con.toString();
 			return con;
 		} catch (SQLException e) {
