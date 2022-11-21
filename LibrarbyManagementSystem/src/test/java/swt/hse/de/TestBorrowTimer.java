@@ -26,13 +26,23 @@ public class TestBorrowTimer {
     }
 
     @Test
-    public void testBorrowForTime() throws ParseException {
+    public void testBorrowForTimePass() throws ParseException {
         Date d = new SimpleDateFormat( "MM-dd-yyyy" ).parse( "08-19-1975" );
         bt.setDate(d);
         String expected = "08-26-1975";
         String actual = bt.borrowForTime(7);
 
         Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testBorrowForTimeFail() throws ParseException {
+        Date d = new SimpleDateFormat( "MM-dd-yyyy" ).parse( "08-19-1975" );
+        bt.setDate(d);
+        String expected = "08-26-1975";
+        String actual = bt.borrowForTime(4);
+
+        Assert.assertNotEquals(expected, actual);
     }
 
 }
