@@ -3,6 +3,7 @@ package swt.hse.de;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class BorrowTimer {
@@ -16,7 +17,9 @@ public class BorrowTimer {
         return sdf.format(cal.getTime());
     }
 
-
+    public void setDate(Date date){
+        cal.setTime(date);
+    }
 
 
 
