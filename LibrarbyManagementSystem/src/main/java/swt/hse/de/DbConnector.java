@@ -116,6 +116,31 @@ public class DbConnector {
 		return true;
 	}
 
+	public boolean returnBookInformation(String nameOfCustomer, String title) throws SQLException {
+		Connection connection = createConnectionToDatabase(root, rootPassword);
+		statement = connection.createStatement();
+		String query = "DELETE FROM borrowed WHERE customer='" + nameOfCustomer + "' AND book='" + title + "';";
+		statement.executeUpdate(query);
+		return true;
+	}
+
+	public String getDueDate(String nameOfCustomer, String title) throws SQLException{
+		Connection connection = createConnectionToDatabase(root, rootPassword);
+		statement = connection.createStatement();
+		ResultSet res = resSet;
+		String query = "SELECT duedate FROM borrowed WHERE customer='" + nameOfCustomer + "' AND book='" + title + "';";
+		res = statement.executeQuery(query);
+		String dueDate;
+		if(res.next()){
+			dueDate = res.getString("duedate");
+		} else {
+			dueDate = res.getString("duedate");
+		}
+
+		return dueDate;
+
+	}
+
 	public void borrowBook(String nameOfCustomer, String title) throws SQLException {
 		Connection connection = createConnectionToDatabase(root, rootPassword);
 		statement = connection.createStatement();
@@ -134,7 +159,7 @@ public class DbConnector {
 		closeConnectionToDatabase();
 	}
 
-	public void returnBook(String title, double rating) throws SQLException {
+	public void returnBook(String title, double rating, String nameOfCustomer) throws SQLException {
 		Connection connection = createConnectionToDatabase(root, rootPassword);
 		double oldRating = getRating(title);
 		int count = getBorrowCount(title);
@@ -142,6 +167,7 @@ public class DbConnector {
 
 		String query = "UPDATE books SET inStock = inStock + 1, rating = '" + newRating + "' WHERE title='" + title
 				+ "';";
+		returnBookInformation(nameOfCustomer, title);
 		statement = connection.createStatement();
 		statement.executeUpdate(query);
 		closeConnectionToDatabase();
