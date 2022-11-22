@@ -1,6 +1,11 @@
 package swt.hse.de;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JOptionPane;
 
@@ -68,6 +73,8 @@ public class JfxConnector {
 	public void borrowBookButton() throws SQLException {
 		if(db.getBookAvailable(nameOfBook.getText())==1 || db.getInStock(nameOfBook.getText())==0) {
 			JOptionPane.showInternalMessageDialog(null, "Book can't be borrowed");
+		} else if(db.alreadyBorrowed(nameOfBook.getText(), nameOfCustomer.getText())){
+			JOptionPane.showInternalMessageDialog(null, nameOfCustomer.getText() + " has already borrowed this book");
 		}
 		else {
 			db.borrowBook(nameOfCustomer.getText(), nameOfBook.getText());
@@ -78,11 +85,30 @@ public class JfxConnector {
 		return;
 	}
 	
-	public void returnBookButton() throws SQLException {
-		db.returnBook(nameOfBook.getText(), Double.parseDouble(rating.getText()));
-		JOptionPane.showInternalMessageDialog(null, "Book has been returned.");
-		searchBook.setText(db.printBookList());
+	public void returnBookButton() throws SQLException, ParseException {
+		if(db.alreadyBorrowed(nameOfBook.getText(), nameOfCustomer.getText())){
+			String dueDate = db.getDueDate(nameOfCustomer.getText(), nameOfBook.getText());
+			db.returnBook(nameOfBook.getText(), Double.parseDouble(rating.getText()), nameOfCustomer.getText());
+			if(isPastDue(dueDate)){
+				JOptionPane.showInternalMessageDialog(null, "Book has been returned on time.");
+			} else {
+				JOptionPane.showInternalMessageDialog(null, "Book is late. Book was due on "
+						+ dueDate + " A late fee of $100 will be owed");
+			}
+
+			searchBook.setText(db.printBookList());
+		} else {
+			JOptionPane.showInternalMessageDialog(null, "This book is not currently borrowed by " + nameOfCustomer.getText());
+		}
+
 		return;
+	}
+
+	public boolean isPastDue(String dueDate) throws ParseException {
+		Date date = Calendar.getInstance().getTime();
+		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+		String today = dateFormat.format(date);
+		return dateFormat.parse(today).before(dateFormat.parse(dueDate));
 	}
 	
 }
