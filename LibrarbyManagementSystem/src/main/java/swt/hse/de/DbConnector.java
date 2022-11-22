@@ -13,6 +13,7 @@ public class DbConnector {
 	private String root = "postgres", rootPassword = "postgrespw";
 	private static ResultSet resSet;
 	public String connectionString;
+	private BorrowTimer bt = new BorrowTimer();
 
 	public Connection createConnectionToDatabase(String name, String password) {
 		try {
@@ -92,6 +93,29 @@ public class DbConnector {
 		
 	}
 
+	public boolean alreadyBorrowed(String title, String customerName)throws SQLException{
+		Connection connection = createConnectionToDatabase(root, rootPassword);
+		ResultSet res = resSet;
+		statement = connection.createStatement();
+		res = statement.executeQuery("SELECT * FROM borrowed");
+		while (res.next())
+			if (title.equals(res.getString("book")) && customerName.equalsIgnoreCase(res.getString("customer"))) {
+				return true;
+			}
+		return false;
+	}
+
+	public boolean addBorrowInformation(String nameOfCustomer, String title) throws SQLException{
+		Connection connection = createConnectionToDatabase(root, rootPassword);
+		statement = connection.createStatement();
+		String dueDate = bt.borrowForTime(7);
+		String query = "INSERT INTO borrowed (customer, book, duedate) VALUES ('" + nameOfCustomer + "','" + title + "','"
+				+  dueDate + "');";
+		statement = connection.createStatement();
+		statement.executeUpdate(query);
+		return true;
+	}
+
 	public void borrowBook(String nameOfCustomer, String title) throws SQLException {
 		Connection connection = createConnectionToDatabase(root, rootPassword);
 		statement = connection.createStatement();
@@ -99,9 +123,11 @@ public class DbConnector {
 		if (getBookAvailable(title) == 0 && getInStock(title) != 1) {
 			query = "UPDATE books SET borrowCount = borrowCount + 1, inStock = inStock -1 " + "WHERE title='"
 					+ title + "' AND NOT inStock = 0;";
+			addBorrowInformation(nameOfCustomer,title);
 		} else if (getBookAvailable(title) == 0 && getInStock(title) == 1) {
 			query = "UPDATE books SET borrowCount = borrowCount + 1, inStock = inStock -1, bookAvailable = 0 "
 					+ "WHERE title='" + title + "' AND NOT inStock = 0 ;";
+			addBorrowInformation(nameOfCustomer,title);
 		} else
 			query = "";
 		statement.executeUpdate(query);

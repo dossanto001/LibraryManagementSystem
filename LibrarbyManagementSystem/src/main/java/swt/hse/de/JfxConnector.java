@@ -67,6 +67,8 @@ public class JfxConnector {
 	public void borrowBookButton() throws SQLException {
 		if(db.getBookAvailable(nameOfBook.getText())==1 || db.getInStock(nameOfBook.getText())==0) {
 			JOptionPane.showInternalMessageDialog(null, "Book can't be borrowed");
+		} else if(db.alreadyBorrowed(nameOfBook.getText(), nameOfCustomer.getText())){
+			JOptionPane.showInternalMessageDialog(null, nameOfCustomer.getText() + " has already borrowed this book");
 		}
 		else {
 			db.borrowBook(nameOfCustomer.getText(), nameOfBook.getText());
