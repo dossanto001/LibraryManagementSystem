@@ -1,14 +1,14 @@
 package swt.hse.de;
-import java.sql.SQLException;
 import java.util.concurrent.TimeoutException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.testfx.api.FxToolkit;
+import org.testfx.framework.junit.ApplicationTest;
 
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
-import org.testfx.api.FxToolkit;
-import org.testfx.framework.junit.ApplicationTest;
 
 public class JfxConnectorTest extends ApplicationTest {
 	Stage stage;

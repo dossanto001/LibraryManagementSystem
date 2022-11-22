@@ -1,6 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>swt.hsw.de</groupId>
 	<artifactId>LibrarbyManagementSystem</artifactId>
@@ -12,9 +10,9 @@
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.25</version>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.2.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
@@ -73,10 +71,7 @@
 
 					</execution>
 				</executions-->
-				<configuration> 
-					<executable>
-						/usr/java/jdk1.8.0_231-amd64
-					</executable>
+				<configuration>
 					<mainClass>swt.hse.de.App</mainClass>
 				</configuration>
 			</plugin>
