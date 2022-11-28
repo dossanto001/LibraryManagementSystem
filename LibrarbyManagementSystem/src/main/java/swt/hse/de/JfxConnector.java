@@ -1,11 +1,11 @@
 package swt.hse.de;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 
 import javax.swing.JOptionPane;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
@@ -15,6 +15,7 @@ public class JfxConnector {
 	//for goals use "clean javafx:run", then click Apply and after that -> run.
 	
 	DbConnector db = new DbConnector();
+	BorrowTimer bt = new BorrowTimer();
 	
 	@FXML
 	public TextArea booksInStock = new TextArea();
@@ -66,20 +67,37 @@ public class JfxConnector {
 	public void borrowBookButton() throws SQLException {
 		if(db.getBookAvailable(nameOfBook.getText())==1 || db.getInStock(nameOfBook.getText())==0) {
 			JOptionPane.showInternalMessageDialog(null, "Book can't be borrowed");
+		} else if(db.alreadyBorrowed(nameOfBook.getText(), nameOfCustomer.getText())){
+			JOptionPane.showInternalMessageDialog(null, nameOfCustomer.getText() + " has already borrowed this book");
 		}
 		else {
 			db.borrowBook(nameOfCustomer.getText(), nameOfBook.getText());
-			JOptionPane.showInternalMessageDialog(null, "Book has been borrowed by " + nameOfCustomer.getText());
+			JOptionPane.showInternalMessageDialog(null, "Book has been borrowed by " + nameOfCustomer.getText() +" book must be returned by " +
+					bt.borrowForTime(7));
 		}
 		searchBook.setText(db.printBookList());
 		return;
 	}
 	
-	public void returnBookButton() throws SQLException {
-		db.returnBook(nameOfBook.getText(), Double.parseDouble(rating.getText()));
-		JOptionPane.showInternalMessageDialog(null, "Book has been returned.");
-		searchBook.setText(db.printBookList());
+	public void returnBookButton() throws SQLException, ParseException {
+		if(db.alreadyBorrowed(nameOfBook.getText(), nameOfCustomer.getText())){
+			String dueDate = db.getDueDate(nameOfCustomer.getText(), nameOfBook.getText());
+			boolean isPastDue = db.isOnTime(nameOfCustomer.getText(), nameOfBook.getText());
+			db.returnBook(nameOfBook.getText(), Double.parseDouble(rating.getText()), nameOfCustomer.getText());
+			if(isPastDue){
+				JOptionPane.showInternalMessageDialog(null, "Book has been returned on time.");
+			} else {
+				JOptionPane.showInternalMessageDialog(null, "Book is late. Book was due on "
+						+ dueDate + " A late fee of $100 will be owed");
+			}
+
+			searchBook.setText(db.printBookList());
+		} else {
+			JOptionPane.showInternalMessageDialog(null, "This book is not currently borrowed by " + nameOfCustomer.getText());
+		}
+
 		return;
 	}
+
 	
 }
