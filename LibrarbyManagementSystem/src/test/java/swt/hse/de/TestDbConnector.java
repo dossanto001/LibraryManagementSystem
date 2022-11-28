@@ -104,9 +104,4 @@ public class TestDbConnector {
 		assertEquals(true, db.isOnTime("name", "title6"));
 	}
 
-	@Test
-	public void testIsOnTimeFalse() throws SQLException, ParseException{
-
-	}
-
 }
