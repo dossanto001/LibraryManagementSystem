@@ -5,6 +5,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class DbConnector {
 
@@ -138,6 +143,20 @@ public class DbConnector {
 		}
 
 		return dueDate;
+
+	}
+
+	public boolean isOnTime(String nameOfCustomer, String title) throws SQLException, ParseException {
+		String dueDate = getDueDate(nameOfCustomer,title);
+		Date date = Calendar.getInstance().getTime();
+		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+		String today = dateFormat.format(date);
+		if(dateFormat.parse(today).before(dateFormat.parse(dueDate)) ||
+				dateFormat.parse(today).equals(dateFormat.parse(dueDate))){
+			return true;
+		} else {
+			return false;
+		}
 
 	}
 

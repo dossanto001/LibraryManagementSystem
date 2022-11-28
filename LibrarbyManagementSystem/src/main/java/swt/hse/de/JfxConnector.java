@@ -1,16 +1,11 @@
 package swt.hse.de;
 
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 import javax.swing.JOptionPane;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
@@ -87,8 +82,9 @@ public class JfxConnector {
 	public void returnBookButton() throws SQLException, ParseException {
 		if(db.alreadyBorrowed(nameOfBook.getText(), nameOfCustomer.getText())){
 			String dueDate = db.getDueDate(nameOfCustomer.getText(), nameOfBook.getText());
+			boolean isPastDue = db.isOnTime(nameOfCustomer.getText(), nameOfBook.getText());
 			db.returnBook(nameOfBook.getText(), Double.parseDouble(rating.getText()), nameOfCustomer.getText());
-			if(isPastDue(dueDate)){
+			if(isPastDue){
 				JOptionPane.showInternalMessageDialog(null, "Book has been returned on time.");
 			} else {
 				JOptionPane.showInternalMessageDialog(null, "Book is late. Book was due on "
@@ -103,11 +99,5 @@ public class JfxConnector {
 		return;
 	}
 
-	public boolean isPastDue(String dueDate) throws ParseException {
-		Date date = Calendar.getInstance().getTime();
-		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-		String today = dateFormat.format(date);
-		return dateFormat.parse(today).before(dateFormat.parse(dueDate));
-	}
 	
 }

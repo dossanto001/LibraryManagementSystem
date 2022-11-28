@@ -1,6 +1,7 @@
 package swt.hse.de;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -95,6 +96,17 @@ public class TestDbConnector {
 		//checking to see if its a date
 		String regex = "^\\d{2}-\\d{2}-\\d{4}$";
 		assertTrue(date.matches(regex));
+	}
+
+	@Test
+	public void testIsOnTimeTrue() throws SQLException, ParseException {
+		db.addBorrowInformation("name", "title6");
+		assertEquals(true, db.isOnTime("name", "title6"));
+	}
+
+	@Test
+	public void testIsOnTimeFalse() throws SQLException, ParseException{
+
 	}
 
 }
