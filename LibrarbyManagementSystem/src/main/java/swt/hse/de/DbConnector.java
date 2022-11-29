@@ -75,18 +75,18 @@ public class DbConnector {
 		return rating;
 	}
 
-	public boolean createBook(String title, String author, int year, int edition, String publisher, int inStock)
+	public boolean createBook(Book book)
 			throws SQLException {
 		String query = null;
 		Connection connection = createConnectionToDatabase(root, rootPassword);
-		if (bookExisting(title)) {
+		if (bookExisting(book.getTitle())) {
 			query = "UPDATE books SET (title, author, year, edition, publisher, inStock, bookAvailable, borrowCount, rating) "
-					+ "VALUES ('" + title + "','" + author + "','" + year + "','" + edition + "','" + publisher + "','"
-					+ inStock + "',0 ,0 ,0);";
+					+ "VALUES ('" + book.getTitle() + "','" + book.getAuthor() + "','" + book.getYear() + "','" + book.getEdition() + "','" + book.getPublisher() + "','"
+					+ book.getInStock() + "',0 ,0 ,0);";
 		} else {
 			query = "INSERT INTO books (title, author, year, edition, publisher, inStock, bookAvailable, borrowCount, rating) "
-					+ "VALUES ('" + title + "','" + author + "','" + year + "','" + edition + "','" + publisher + "','"
-					+ inStock + "',0 ,0 ,0);";
+					+ "VALUES ('" + book.getTitle() + "','" + book.getAuthor() + "','" + book.getYear() + "','" + book.getEdition() + "','" + book.getPublisher() + "','"
+					+ book.getInStock() + "',0 ,0 ,0);";
 		}
 		statement = connection.createStatement();
 		statement.executeUpdate(query);
