@@ -1,15 +1,15 @@
 package swt.hse.de;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-
 import java.sql.SQLException;
+import java.text.ParseException;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.postgresql.util.PSQLException;
+
+import static org.junit.Assert.*;
 
 @RunWith(JUnit4.class)
 public class TestDbConnector {
@@ -65,6 +65,43 @@ public class TestDbConnector {
 	@Test
 	public void testBookExistingFail() throws SQLException {
 		assertEquals(false, db.bookExisting("this book does not exist"));
+	}
+
+	@Test
+	public void testAddBorrowInformation() throws SQLException  {
+		assertEquals(true, db.addBorrowInformation("name", "title"));
+	}
+
+	@Test
+	public void testReturnBookInformation() throws SQLException  {
+		db.addBorrowInformation("name", "title2");
+		assertEquals(true, db.returnBookInformation("name", "title2"));
+	}
+
+	@Test
+	public void testAlreadyBorrowedTrue() throws SQLException  {
+		db.addBorrowInformation("name", "title3");
+		assertEquals(true, db.alreadyBorrowed("title3", "name"));
+	}
+
+	@Test
+	public void testAlreadyBorrowedFalse() throws SQLException  {
+		assertEquals(false, db.alreadyBorrowed("title4", "name"));
+	}
+
+	@Test
+	public void testGetDueDate() throws SQLException  {
+		db.addBorrowInformation("name", "title5");
+		String date = db.getDueDate("name", "title5");
+		//checking to see if its a date
+		String regex = "^\\d{2}-\\d{2}-\\d{4}$";
+		assertTrue(date.matches(regex));
+	}
+
+	@Test
+	public void testIsOnTimeTrue() throws SQLException, ParseException {
+		db.addBorrowInformation("name", "title6");
+		assertEquals(true, db.isOnTime("name", "title6"));
 	}
 
 }
