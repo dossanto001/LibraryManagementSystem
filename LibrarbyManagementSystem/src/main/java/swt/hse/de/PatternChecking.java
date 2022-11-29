@@ -24,4 +24,8 @@ public class PatternChecking {
     public boolean checkAlphaNumeric(String phrase){
         return phrase.matches(alphaNumericRegexPattern);
     }
+
+    public boolean checkYear(String number){
+        return (number.length()==4 && checkNumber(number));
+    }
 }
