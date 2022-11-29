@@ -57,8 +57,9 @@ public class JfxConnector {
 
 	@FXML
 	public void addBookButton() throws SQLException {
-		db.createBook(nameOfBook.getText(), author.getText(), Integer.parseInt(year.getText()), 
-				Integer.parseInt(edition.getText()), publisher.getText(), Integer.parseInt(numberInStock.getText()));
+		Book book = new Book(nameOfBook.getText(), author.getText(), year.getText(),
+				edition.getText(), publisher.getText(), numberInStock.getText());
+		db.createBook(book);
 		JOptionPane.showInternalMessageDialog(null, "book(s) have been added");
 		searchBook.setText(db.printBookList());
 	}
