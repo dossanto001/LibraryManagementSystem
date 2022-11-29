@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="LibrarbyManagementSystem" target="8" />
+      <module name="LibrarbyManagementSystem" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

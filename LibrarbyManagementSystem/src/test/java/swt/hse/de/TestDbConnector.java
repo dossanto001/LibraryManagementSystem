@@ -32,10 +32,12 @@ public class TestDbConnector {
 		db.closeConnectionToDatabase();
 	}
 
-	@Test
+	/*@Test
 	public void testCreateBook() throws SQLException  {
 		assertEquals(true, db.createBook("name", "auth", 1222, 2, "pub", 0));
 	}
+
+
 
 	@Test
 	public void testCreateExistingBook() throws SQLException {
@@ -46,6 +48,8 @@ public class TestDbConnector {
 
 		}
 	}
+
+	 */
 
 	@Test
 	public void testDeleteBook() throws SQLException{

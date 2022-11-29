@@ -16,6 +16,8 @@ public class JfxConnector {
 	
 	DbConnector db = new DbConnector();
 	BorrowTimer bt = new BorrowTimer();
+
+	PatternChecking pt = new PatternChecking();
 	
 	@FXML
 	public TextArea booksInStock = new TextArea();
@@ -46,22 +48,34 @@ public class JfxConnector {
 	@FXML
 	public void deleteBookButton() throws SQLException {
 		String title = nameOfBook.getText();
-		if(db.getInStock(title) > 0) {
-			db.deleteBook(title, Integer.parseInt(amount.getText()));
-			JOptionPane.showInternalMessageDialog(null, "book(s) have been deleted");
+		if(pt.checkAlphaNumeric(title)){
+			if(db.getInStock(title) > 0) {
+				db.deleteBook(title, Integer.parseInt(amount.getText()));
+				JOptionPane.showInternalMessageDialog(null, "book(s) have been deleted");
+			}
+			else
+				JOptionPane.showInternalMessageDialog(null, "No books left to delete");
+			searchBook.setText(db.printBookList());
+		}else{
+			JOptionPane.showInternalMessageDialog(null,
+					"Title does not follow Alphanumeric protocol");
 		}
-		else
-			JOptionPane.showInternalMessageDialog(null, "No books left to delete");
-		searchBook.setText(db.printBookList());
+
 	}
 
 	@FXML
 	public void addBookButton() throws SQLException {
 		Book book = new Book(nameOfBook.getText(), author.getText(), year.getText(),
 				edition.getText(), publisher.getText(), numberInStock.getText());
-		db.createBook(book);
-		JOptionPane.showInternalMessageDialog(null, "book(s) have been added");
-		searchBook.setText(db.printBookList());
+		if(pt.checkAlphaNumeric(book.getTitle()) && pt.checkWord(book.getAuthor())){
+			db.createBook(book);
+			JOptionPane.showInternalMessageDialog(null, "book(s) have been added");
+			searchBook.setText(db.printBookList());
+		}else{
+			JOptionPane.showInternalMessageDialog(null,
+					"Incorrect pattern for book addition ");
+		}
+
 	}
 
 	@FXML
