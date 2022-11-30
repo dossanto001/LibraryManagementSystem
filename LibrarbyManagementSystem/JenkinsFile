@@ -14,7 +14,7 @@ pipeline {
             steps {
                 echo 'Building version ${parameters.VERSION}'
                 //sh apt-get install -y openjfx
-                sh 'mvn exec:java -X -f LibrarbyManagementSystem/pom.xml clean javafx:run'
+                sh 'mvn exec:java -X -f LibrarbyManagementSystem/pom.xml clean javafx:build'
             }
         }
         stage('Test') {
