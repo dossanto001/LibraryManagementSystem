@@ -67,7 +67,9 @@ public class JfxConnector {
 	public void addBookButton() throws SQLException {
 		Book book = new Book(nameOfBook.getText(), author.getText(), year.getText(),
 				edition.getText(), publisher.getText(), numberInStock.getText());
-		if(pt.checkAlphaNumeric(book.getTitle()) && pt.checkWord(book.getAuthor())){
+		if(pt.checkAlphaNumeric(book.getTitle()) && pt.checkWord(book.getAuthor())
+				&& pt.checkYear((String.valueOf(book.getYear()))) && pt.checkNumber(String.valueOf(book.getEdition()))
+				&& pt.checkAlphaNumeric(book.getPublisher()) && pt.checkNumber(String.valueOf(book.getInStock()))){
 			db.createBook(book);
 			JOptionPane.showInternalMessageDialog(null, "book(s) have been added");
 			searchBook.setText(db.printBookList());
@@ -95,21 +97,26 @@ public class JfxConnector {
 	}
 	
 	public void returnBookButton() throws SQLException, ParseException {
-		if(db.alreadyBorrowed(nameOfBook.getText(), nameOfCustomer.getText())){
-			String dueDate = db.getDueDate(nameOfCustomer.getText(), nameOfBook.getText());
-			boolean isPastDue = db.isOnTime(nameOfCustomer.getText(), nameOfBook.getText());
-			db.returnBook(nameOfBook.getText(), Double.parseDouble(rating.getText()), nameOfCustomer.getText());
-			if(isPastDue){
-				JOptionPane.showInternalMessageDialog(null, "Book has been returned on time.");
-			} else {
-				JOptionPane.showInternalMessageDialog(null, "Book is late. Book was due on "
-						+ dueDate + " A late fee of $100 will be owed");
-			}
+		if(pt.checkNumber(rating.getText())){
+			if(db.alreadyBorrowed(nameOfBook.getText(), nameOfCustomer.getText())){
+				String dueDate = db.getDueDate(nameOfCustomer.getText(), nameOfBook.getText());
+				boolean isPastDue = db.isOnTime(nameOfCustomer.getText(), nameOfBook.getText());
+				db.returnBook(nameOfBook.getText(), Double.parseDouble(rating.getText()), nameOfCustomer.getText());
+				if(isPastDue){
+					JOptionPane.showInternalMessageDialog(null, "Book has been returned on time.");
+				} else {
+					JOptionPane.showInternalMessageDialog(null, "Book is late. Book was due on "
+							+ dueDate + " A late fee of $100 will be owed");
+				}
 
-			searchBook.setText(db.printBookList());
-		} else {
-			JOptionPane.showInternalMessageDialog(null, "This book is not currently borrowed by " + nameOfCustomer.getText());
+				searchBook.setText(db.printBookList());
+			} else {
+				JOptionPane.showInternalMessageDialog(null, "This book is not currently borrowed by " + nameOfCustomer.getText());
+			}
+		}else{
+			JOptionPane.showInternalMessageDialog(null, "Incorrect rating pattern. Please try again");
 		}
+
 
 		return;
 	}

@@ -25,6 +25,11 @@ public class TestPattern {
     }
 
     @Test
+    public void testFloatingNumberTrue(){
+        assertTrue(pt.checkNumber("324142.0"));
+    }
+
+    @Test
     public void testNumberTrue(){
         assertTrue(pt.checkNumber("324142"));
     }
