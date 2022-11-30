@@ -60,20 +60,22 @@
 				<groupId>org.openjfx</groupId>
 				<artifactId>javafx-maven-plugin</artifactId>
 				<version>0.0.6</version>
-				<!--executions>
+				<executions>
 					<execution>
 						<id>default-cli</id>
-
+						<configuration>
+							<mainClass>swt.hse.de.App</mainClass>
+						</configuration>
 					</execution>
-				</executions-->
+				</executions>
 				<!--configuration>
 					<mainClass>swt.hse.de.App</mainClass>
 				</configuration-->
-				<configuration>
+				<!--configuration>
 					<executable>
 						/usr/java/jdk1.8.0_231-amd64/bin/java
 					</executable>
-				</configuration>
+				</configuration-->
 			</plugin>
 		</plugins>
 	</build>
