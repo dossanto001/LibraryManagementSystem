@@ -66,8 +66,13 @@
 
 					</execution>
 				</executions-->
-				<configuration>
+				<!--configuration>
 					<mainClass>swt.hse.de.App</mainClass>
+				</configuration-->
+				<configuration>
+					<executable>
+						/usr/java/jdk1.8.0_231-amd64/bin/java
+					</executable>
 				</configuration>
 			</plugin>
 		</plugins>
