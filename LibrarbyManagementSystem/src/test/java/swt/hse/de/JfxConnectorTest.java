@@ -25,6 +25,7 @@ public class JfxConnectorTest extends ApplicationTest {
 	}
 	
 	@Test
+	@Ignore
 	public void addBookButtonTest() throws InterruptedException, TimeoutException {
 		clickOn("#amount").write("4");
 		clickOn("#author").write("Sapkowski");
@@ -37,6 +38,7 @@ public class JfxConnectorTest extends ApplicationTest {
 	}
 	
 	@Test
+	@Ignore
 	public void borrowBookButtonSadTest() {
 		clickOn("#nameOfCustomer").write("Hugo");
 		clickOn("#nameOfBook").write("name");
@@ -44,6 +46,7 @@ public class JfxConnectorTest extends ApplicationTest {
 	}
 	
 	@Test
+	@Ignore
 	public void borrowAndReturnBookButton() {
 		clickOn("#nameOfCustomer").write("Chad");
 		clickOn("#nameOfBook").write("The Witcher: Time of Contempt");
