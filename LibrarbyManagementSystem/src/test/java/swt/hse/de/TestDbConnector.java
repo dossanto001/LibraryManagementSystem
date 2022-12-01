@@ -34,16 +34,18 @@ public class TestDbConnector {
 
 	@Test
 	public void testCreateBook() throws SQLException  {
-		assertEquals(true, db.createBook("name", "auth", 1222, 2, "pub", 0));
+		Book book = new Book("name", "auth", 1222, 2, "pub", 0);
+		assertEquals(true, db.createBook(book));
 	}
 
 	@Test
 	public void testCreateExistingBook() throws SQLException {
-		assertEquals(true, db.createBook("name2", "auth", 1222, 2, "pub", 0));
+		Book book1 = new Book("name2", "auth", 1222, 2, "pub", 0);
+		Book book2 = new Book("name2", "auth", 1222, 2, "pub", 1);
+		assertEquals(true, db.createBook(book1));
 		try {
-			assertEquals(true, db.createBook("name2", "auth", 1222, 2, "pub", 1));
-		} catch(PSQLException ex){
-
+			assertEquals(true, db.createBook(book2));
+		} catch(PSQLException ex) {
 		}
 	}
 
