@@ -35,12 +35,14 @@ public class TestDbConnector {
 
 	@Test
 	public void testCreateBook() throws SQLException  {
-		assertTrue(db.createBook(new Book("name3", "auth", 1222, 2, "pub", 0)));
+		Book book = new Book("name", "auth", 1222, 2, "pub", 0);
+		assertTrue(db.createBook(book);
 	}
 
 	@Test
 	public void testCreateExistingBook() throws SQLException {
-		db.createBook(new Book("name2", "auth", 1222, 2, "pub", 0));
+		Book book = new Book("name2", "auth", 1222, 2, "pub", 0);
+		db.createBook(book);
 		assertTrue(db.createBook(new Book("name2", "auth", 1222, 2, "pub", 0)));
 	}
 
