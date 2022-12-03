@@ -21,8 +21,9 @@ public class TestDbConnector {
 		db = new DbConnector();
 	}
 
+	@Test
 	public void testConnectionFail() throws SQLException  {
-		assertEquals(null, db.createConnectionToDatabase("WrongUserName", "postgrespw"));
+		assertNull(db.createConnectionToDatabase("WrongUserName", "postgrespw"));
 		db.closeConnectionToDatabase();
 	}
 
@@ -35,60 +36,62 @@ public class TestDbConnector {
 	@Test
 	public void testCreateBook() throws SQLException  {
 		Book book = new Book("name", "auth", 1222, 2, "pub", 0);
-		assertEquals(true, db.createBook(book));
+		assertTrue(db.createBook(book);
 	}
 
 	@Test
 	public void testCreateExistingBook() throws SQLException {
-		Book book1 = new Book("name2", "auth", 1222, 2, "pub", 0);
-		Book book2 = new Book("name2", "auth", 1222, 2, "pub", 1);
-		assertEquals(true, db.createBook(book1));
-		try {
-			assertEquals(true, db.createBook(book2));
-		} catch(PSQLException ex) {
-		}
+		Book book = new Book("name2", "auth", 1222, 2, "pub", 0);
+		db.createBook(book);
+		assertTrue(db.createBook(new Book("name2", "auth", 1222, 2, "pub", 0)));
 	}
 
 	@Test
-	public void testDeleteBook() throws SQLException{
-		assertEquals(true, db.deleteBook("name", 1));
+	public void testDeleteBookTrue() throws SQLException{
+		db.createBook(new Book("name", "auth", 1222, 2, "pub", 0));
+		assertTrue(db.deleteBook("name", 1));
+	}
+
+	@Test
+	public void testDeleteBookFalse() throws SQLException{
+		assertFalse(db.deleteBook("name", 1));
 	}
 
 	@Test
 	public void testDeleteBookFail() throws SQLException  {
-		assertEquals(false, db.deleteBook("no book with this name", 1));
+		assertFalse(db.deleteBook("no book with this name", 1));
 	}
 
 	@Test
 	public void testBookExistingSuccess() throws SQLException  {
-		assertEquals(true, db.bookExisting("name"));
+		assertTrue(db.bookExisting("name"));
 	}
 
 	@Test
 	public void testBookExistingFail() throws SQLException {
-		assertEquals(false, db.bookExisting("this book does not exist"));
+		assertFalse(db.bookExisting("this book does not exist"));
 	}
 
 	@Test
 	public void testAddBorrowInformation() throws SQLException  {
-		assertEquals(true, db.addBorrowInformation("name", "title"));
+		assertTrue(db.addBorrowInformation("name", "title"));
 	}
 
 	@Test
 	public void testReturnBookInformation() throws SQLException  {
 		db.addBorrowInformation("name", "title2");
-		assertEquals(true, db.returnBookInformation("name", "title2"));
+		assertTrue(db.returnBookInformation("name", "title2"));
 	}
 
 	@Test
 	public void testAlreadyBorrowedTrue() throws SQLException  {
 		db.addBorrowInformation("name", "title3");
-		assertEquals(true, db.alreadyBorrowed("title3", "name"));
+		assertTrue(db.alreadyBorrowed("title3", "name"));
 	}
 
 	@Test
 	public void testAlreadyBorrowedFalse() throws SQLException  {
-		assertEquals(false, db.alreadyBorrowed("title4", "name"));
+		assertFalse(db.alreadyBorrowed("title4", "name"));
 	}
 
 	@Test
@@ -103,7 +106,7 @@ public class TestDbConnector {
 	@Test
 	public void testIsOnTimeTrue() throws SQLException, ParseException {
 		db.addBorrowInformation("name", "title6");
-		assertEquals(true, db.isOnTime("name", "title6"));
+		assertTrue(db.isOnTime("name", "title6"));
 	}
 
 }
