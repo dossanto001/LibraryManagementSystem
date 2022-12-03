@@ -23,34 +23,34 @@ public class JfxConnectorTest extends ApplicationTest {
 		FxToolkit.hideStage();
 		release(new KeyCode[] {});
 	}
-	
-	@Test
-	public void addBookButtonTest() throws InterruptedException, TimeoutException {
-		clickOn("#amount").write("4");
-		clickOn("#author").write("Sapkowski");
-		clickOn("#publisher").write("SuperNowa");
-		clickOn("#edition").write("3");
-		clickOn("#year").write("2013");
-		clickOn("#nameOfBook").write("The Witcher: Time Of Contempt");
-		clickOn("#numberInStock").write("4");
-		clickOn("#addBookButton");
-	}
-	
-	@Test
-	public void borrowBookButtonSadTest() {
-		clickOn("#nameOfCustomer").write("Hugo");
-		clickOn("#nameOfBook").write("name");
-		clickOn("#borrowBookButton");
-	}
-	
-	@Test
-	public void borrowAndReturnBookButton() {
-		clickOn("#nameOfCustomer").write("Chad");
-		clickOn("#nameOfBook").write("The Witcher: Time of Contempt");
-		clickOn("#borrowBookButton");
-		clickOn("#rating").write("4.5");
-		clickOn("#returnBookButton");
-	}
+//
+//	@Test
+//	public void addBookButtonTest() throws InterruptedException, TimeoutException {
+//		clickOn("#amount").write("4");
+//		clickOn("#author").write("Sapkowski");
+//		clickOn("#publisher").write("SuperNowa");
+//		clickOn("#edition").write("3");
+//		clickOn("#year").write("2013");
+//		clickOn("#nameOfBook").write("The Witcher: Time Of Contempt");
+//		clickOn("#numberInStock").write("4");
+//		clickOn("#addBookButton");
+//	}
+//
+//	@Test
+//	public void borrowBookButtonSadTest() {
+//		clickOn("#nameOfCustomer").write("Hugo");
+//		clickOn("#nameOfBook").write("name");
+//		clickOn("#borrowBookButton");
+//	}
+//
+//	@Test
+//	public void borrowAndReturnBookButton() {
+//		clickOn("#nameOfCustomer").write("Chad");
+//		clickOn("#nameOfBook").write("The Witcher: Time of Contempt");
+//		clickOn("#borrowBookButton");
+//		clickOn("#rating").write("4.5");
+//		clickOn("#returnBookButton");
+//	}
 
 //	@Test
 //	public void borrowBookButtonTest() throws SQLException {

@@ -35,22 +35,24 @@ public class TestDbConnector {
 
 	@Test
 	public void testCreateBook() throws SQLException  {
-		assertTrue(db.createBook(new Book("name2", "auth", 1222, 2, "pub", 0)));
+		assertTrue(db.createBook(new Book("name3", "auth", 1222, 2, "pub", 0)));
 	}
 
 	@Test
 	public void testCreateExistingBook() throws SQLException {
+		db.createBook(new Book("name2", "auth", 1222, 2, "pub", 0));
 		assertTrue(db.createBook(new Book("name2", "auth", 1222, 2, "pub", 0)));
-		try {
-			assertTrue(db.createBook(new Book("name2", "auth", 1222, 2, "pub", 0)));
-		} catch(PSQLException ex){
-			ex.printStackTrace();
-		}
 	}
 
 	@Test
-	public void testDeleteBook() throws SQLException{
+	public void testDeleteBookTrue() throws SQLException{
+		db.createBook(new Book("name", "auth", 1222, 2, "pub", 0));
 		assertTrue(db.deleteBook("name", 1));
+	}
+
+	@Test
+	public void testDeleteBookFalse() throws SQLException{
+		assertFalse(db.deleteBook("name", 1));
 	}
 
 	@Test
