@@ -14,7 +14,6 @@ public class DbConnector implements IDbConnector {
 	private static ResultSet resSet;
 	public String connectionString;
 	private BorrowTimer bt = new BorrowTimer();
-	private DbBookFunctions dbBookFunctions = new DbBookFunctions();
 	private DbBorrowFunctions dbBorrowFunctions = new DbBorrowFunctions();
 	private String query;
 
@@ -30,52 +29,52 @@ public class DbConnector implements IDbConnector {
 
 	@Override
 	public int getBookAvailable(String title) throws SQLException {
-		return dbBookFunctions.getValuesFromBook("bookAvailable", title, this);
+		return DbBookFunctions.getValuesFromBook("bookAvailable", title, this);
 	}
 
 	@Override
 	public int getInStock(String title) throws SQLException {
-		return dbBookFunctions.getValuesFromBook("inStock", title, this);
+		return DbBookFunctions.getValuesFromBook("inStock", title, this);
 	}
 
 	@Override
 	public int getBorrowCount(String title) throws SQLException {
-		return dbBookFunctions.getValuesFromBook("borrowCount", title, this);
+		return DbBookFunctions.getValuesFromBook("borrowCount", title, this);
 	}
 
 	@Override
 	public double getRating(String title) throws SQLException {
-		return dbBookFunctions.getValuesFromBook("rating", title, this);
+		return DbBookFunctions.getValuesFromBook("rating", title, this);
 	}
 
 	@Override
 	public boolean createBook(Book book) throws SQLException {
-		return dbBookFunctions.createBook(book, this);
+		return DbBookFunctions.createBook(book, this);
 	}
 
 	@Override
 	public void borrowBook(String nameOfCustomer, String title) throws SQLException {
-		dbBookFunctions.borrowBook(nameOfCustomer, title, this);
+		DbBookFunctions.borrowBook(nameOfCustomer, title, this);
 	}
 
 	@Override
 	public void returnBook(String title, double rating, String nameOfCustomer) throws SQLException {
-		dbBookFunctions.returnBook(title, rating, nameOfCustomer, this);
+		DbBookFunctions.returnBook(title, rating, nameOfCustomer, this);
 	}
 
 	@Override
 	public boolean deleteBook(String title, int amount) throws SQLException {
-		return dbBookFunctions.deleteBook(title, amount, this);
+		return DbBookFunctions.deleteBook(title, amount, this);
 	}
 
 	@Override
 	public String printBookList() throws SQLException {
-		return dbBookFunctions.printBookList(this);
+		return DbBookFunctions.printBookList(this);
 	}
 
 	@Override
 	public boolean bookExisting(String name) throws SQLException {
-		return dbBookFunctions.bookExisting(name, this);
+		return DbBookFunctions.bookExisting(name, this);
 	}
 
 	@Override

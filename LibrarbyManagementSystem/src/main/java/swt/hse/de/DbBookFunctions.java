@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.sql.SQLException;
 
 public class DbBookFunctions {
-    boolean createBook(Book book, DbConnector dbConnector) throws SQLException {
+    public static boolean createBook(Book book, DbConnector dbConnector) throws SQLException {
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
         if (dbConnector.bookExisting(book.getTitle())) {
             dbConnector.setQuery("UPDATE library.books SET title='" + book.getTitle() + "', author='" + book.getAuthor() +
@@ -21,7 +21,7 @@ public class DbBookFunctions {
         return true;
     }
 
-    int getValuesFromBook(String selectValue, String title, DbConnector dbConnector) throws SQLException {
+    public static int getValuesFromBook(String selectValue, String title, DbConnector dbConnector) throws SQLException {
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
         dbConnector.setStatement(DbConnector.getConnection().createStatement());
         DbConnector.setResSet(dbConnector.getStatement().executeQuery("SELECT " + selectValue + " FROM library.books WHERE title='" + title + "';"));
@@ -31,7 +31,7 @@ public class DbBookFunctions {
         return queryResult;
     }
 
-    void borrowBook(String nameOfCustomer, String title, DbConnector dbConnector) throws SQLException {
+    public static void borrowBook(String nameOfCustomer, String title, DbConnector dbConnector) throws SQLException {
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
         dbConnector.setStatement(DbConnector.getConnection().createStatement());
         if (dbConnector.getBookAvailable(title) == 0 && dbConnector.getInStock(title) != 1) {
@@ -48,7 +48,7 @@ public class DbBookFunctions {
         dbConnector.closeConnectionToDatabase();
     }
 
-    void returnBook(String title, double rating, String nameOfCustomer, DbConnector dbConnector) throws SQLException {
+    public static void returnBook(String title, double rating, String nameOfCustomer, DbConnector dbConnector) throws SQLException {
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
         double oldRating = dbConnector.getRating(title);
         int count = dbConnector.getBorrowCount(title);
@@ -62,7 +62,7 @@ public class DbBookFunctions {
         dbConnector.closeConnectionToDatabase();
     }
 
-    boolean deleteBook(String title, int amount, DbConnector dbConnector) throws SQLException {
+    public static boolean deleteBook(String title, int amount, DbConnector dbConnector) throws SQLException {
         int option = JOptionPane.showConfirmDialog(null, "Do you want to delete " +
                 amount + " pieces of " + title + "?");
         if (option == 1 || option == 2) {
@@ -84,7 +84,7 @@ public class DbBookFunctions {
         }
     }
 
-    String printBookList(DbConnector dbConnector) throws SQLException {
+    public static String printBookList(DbConnector dbConnector) throws SQLException {
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
         dbConnector.setStatement(DbConnector.getConnection().createStatement());
         DbConnector.setResSet(dbConnector.getStatement().executeQuery("SELECT * FROM library.books"));
@@ -95,7 +95,7 @@ public class DbBookFunctions {
         return resultOfQuery;
     }
 
-    boolean bookExisting(String name, DbConnector dbConnector) throws SQLException {
+    public static boolean bookExisting(String name, DbConnector dbConnector) throws SQLException {
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
         dbConnector.setStatement(DbConnector.getConnection().createStatement());
         DbConnector.setResSet(dbConnector.getStatement().executeQuery("SELECT * FROM library.books"));
