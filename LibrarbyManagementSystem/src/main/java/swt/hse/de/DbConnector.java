@@ -1,266 +1,153 @@
 package swt.hse.de;
 
-import javax.swing.*;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 public class DbConnector implements IDbConnector {
-
 	private static Connection connection;
 	private Statement statement;
-	private final String root = "postgres", rootPassword = "postgrespw";
+	private final String root = "postgres";
+	private final String rootPassword = "postgrespw";
 	private static ResultSet resSet;
 	public String connectionString;
 	private BorrowTimer bt = new BorrowTimer();
+	private DbBookFunctions dbBookQueries = new DbBookFunctions();
+	private DbBorrowQueries dbBorrowQueries = new DbBorrowQueries();
+	private String query;
 
 	@Override
 	public Connection createConnectionToDatabase(String name, String password) {
-		try {
-			Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:49153/library", name, password);
-			connectionString = con.toString();
-			return con;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
+		return DbConnectionFunction.createConnectionToDatabase(name, password, this);
 	}
 
 	@Override
 	public void closeConnectionToDatabase() throws SQLException {
-		if (connection != null) {
-			try {
-				connection.close();
-			} catch (Exception e) {
-				System.out.println(connection + " left open (connection)");
-				e.printStackTrace();
-			}
-		}
-		if (statement != null) {
-			try {
-				statement.close();
-
-			} catch (Exception e) {
-				System.out.println(statement + " left open (statement)");
-				e.printStackTrace();
-			}
-		}
-		if (resSet != null) {
-			try {
-				resSet.close();
-			} catch (Exception e) {
-				System.out.println(resSet + " left open (result set)");
-				e.printStackTrace();
-			}
-		}
-	}
-
-	private int getValuesFromBook(String selectValue, String title) throws SQLException {
-		Connection connection = createConnectionToDatabase(root, rootPassword);
-		ResultSet res = resSet;
-		statement = connection.createStatement();
-		res = statement.executeQuery("SELECT " + selectValue + " FROM library.books WHERE title='" + title + "';");
-		int queryResult = 187;
-		while (res.next())
-			queryResult = res.getInt(selectValue);
-		return queryResult;
+		DbConnectionFunction.closeConnectionToDatabase(this);
 	}
 
 	@Override
 	public int getBookAvailable(String title) throws SQLException {
-		return getValuesFromBook("bookAvailable", title);
+		return dbBookQueries.getValuesFromBookQuery("bookAvailable", title, this);
 	}
 
 	@Override
 	public int getInStock(String title) throws SQLException {
-		return getValuesFromBook("inStock", title);
+		return dbBookQueries.getValuesFromBookQuery("inStock", title, this);
 	}
 
 	@Override
 	public int getBorrowCount(String title) throws SQLException {
-		return getValuesFromBook("borrowCount", title);
+		return dbBookQueries.getValuesFromBookQuery("borrowCount", title, this);
 	}
 
 	@Override
 	public double getRating(String title) throws SQLException {
-		return getValuesFromBook("rating", title);
+		return dbBookQueries.getValuesFromBookQuery("rating", title, this);
 	}
 
 	@Override
-	public boolean createBook(Book book)
-			throws SQLException {
-		String query;
-		Connection connection = createConnectionToDatabase(root, rootPassword);
-		if (bookExisting(book.getTitle())) {
-			query = "UPDATE library.books SET title='" + book.getTitle() + "', author='" + book.getAuthor() +
-					"', year='" + book.getYear() + "', edition='" + book.getEdition() + "', publisher='" +
-					book.getPublisher() + "', instock='"+ book.getInStock() + "'";
-		} else {
-			query = "INSERT INTO library.books (title, author, year, edition, publisher, inStock, bookAvailable, borrowCount, rating) "
-					+ "VALUES ('" + book.getTitle() + "','" + book.getAuthor() + "','" + book.getYear() + "','" + book.getEdition() + "','" + book.getPublisher() + "','"
-					+ book.getInStock() + "',0 ,0 ,0);";
-		}
-		statement = connection.createStatement();
-		statement.executeUpdate(query);
-		closeConnectionToDatabase();
-		return true;
-	}
-
-	@Override
-	public boolean alreadyBorrowed(String title, String customerName)throws SQLException{
-		Connection connection = createConnectionToDatabase(root, rootPassword);
-		ResultSet res = resSet;
-		statement = connection.createStatement();
-		res = statement.executeQuery("SELECT * FROM borrowed");
-		while (res.next())
-			if (title.equals(res.getString("book")) && customerName.equalsIgnoreCase(res.getString("customer"))) {
-				return true;
-			}
-		return false;
-	}
-
-	@Override
-	public boolean addBorrowInformation(String nameOfCustomer, String title) throws SQLException{
-		Connection connection = createConnectionToDatabase(root, rootPassword);
-		statement = connection.createStatement();
-		String dueDate = bt.borrowForTime(7);
-		String query = "INSERT INTO borrowed (customer, book, duedate) VALUES ('" + nameOfCustomer + "','" + title + "','"
-				+  dueDate + "');";
-		statement = connection.createStatement();
-		statement.executeUpdate(query);
-		return true;
-	}
-
-	@Override
-	public boolean returnBookInformation(String nameOfCustomer, String title) throws SQLException {
-		Connection connection = createConnectionToDatabase(root, rootPassword);
-		statement = connection.createStatement();
-		String query = "DELETE FROM borrowed WHERE customer='" + nameOfCustomer + "' AND book='" + title + "';";
-		statement.executeUpdate(query);
-		return true;
-	}
-
-	@Override
-	public String getDueDate(String nameOfCustomer, String title) throws SQLException{
-		Connection connection = createConnectionToDatabase(root, rootPassword);
-		statement = connection.createStatement();
-		ResultSet res = resSet;
-		String query = "SELECT duedate FROM borrowed WHERE customer='" + nameOfCustomer + "' AND book='" + title + "';";
-		res = statement.executeQuery(query);
-		String dueDate;
-		if(res.next()){
-			dueDate = res.getString("duedate");
-		} else {
-			dueDate = res.getString("duedate");
-		}
-
-		return dueDate;
-
-	}
-
-	@Override
-	public boolean isOnTime(String nameOfCustomer, String title) throws SQLException, ParseException {
-		String dueDate = getDueDate(nameOfCustomer,title);
-		Date date = Calendar.getInstance().getTime();
-		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-		String today = dateFormat.format(date);
-		if(dateFormat.parse(today).before(dateFormat.parse(dueDate)) ||
-				dateFormat.parse(today).equals(dateFormat.parse(dueDate))){
-			return true;
-		} else {
-			return false;
-		}
-
+	public boolean createBook(Book book) throws SQLException {
+		return dbBookQueries.createBookQuery(book, this);
 	}
 
 	@Override
 	public void borrowBook(String nameOfCustomer, String title) throws SQLException {
-		Connection connection = createConnectionToDatabase(root, rootPassword);
-		statement = connection.createStatement();
-		String query;
-		if (getBookAvailable(title) == 0 && getInStock(title) != 1) {
-			query = "UPDATE library.books SET borrowCount = borrowCount + 1, inStock = inStock -1 " + "WHERE title='"
-					+ title + "' AND NOT inStock = 0;";
-			addBorrowInformation(nameOfCustomer,title);
-		} else if (getBookAvailable(title) == 0 && getInStock(title) == 1) {
-			query = "UPDATE library.books SET borrowCount = borrowCount + 1, inStock = inStock -1, bookAvailable = 0 "
-					+ "WHERE title='" + title + "' AND NOT inStock = 0 ;";
-			addBorrowInformation(nameOfCustomer,title);
-		} else
-			query = "";
-		statement.executeUpdate(query);
-		closeConnectionToDatabase();
+		dbBookQueries.borrowBookQuery(nameOfCustomer, title, this);
 	}
 
 	@Override
 	public void returnBook(String title, double rating, String nameOfCustomer) throws SQLException {
-		Connection connection = createConnectionToDatabase(root, rootPassword);
-		double oldRating = getRating(title);
-		int count = getBorrowCount(title);
-		double newRating = (oldRating * ((double) count - 1.0) + rating) / (double) count;
-
-		String query = "UPDATE library.books SET inStock = inStock + 1, rating = '" + newRating + "' WHERE title='" + title
-				+ "';";
-		returnBookInformation(nameOfCustomer, title);
-		statement = connection.createStatement();
-		statement.executeUpdate(query);
-		closeConnectionToDatabase();
+		dbBookQueries.returnBookQuery(title, rating, nameOfCustomer, this);
 	}
 
 	@Override
 	public boolean deleteBook(String title, int amount) throws SQLException {
-		int option = JOptionPane.showConfirmDialog(null, "Do you want to delete " +
-				amount + " pieces of " + title + "?");
-		if (option == 1 || option == 2) {
-			return false;
-		}
-		Connection connection = createConnectionToDatabase(root, rootPassword);
-		if (getBookAvailable(title) == 0) {
-			String query = "UPDATE library.books SET inStock = inStock - '" + amount + "' WHERE title= '" + title + "';";
-			statement = connection.createStatement();
-			statement.executeUpdate(query);
-			query = "UPDATE library.books SET inStock= 0 WHERE inStock < 0;";
-			statement = connection.createStatement();
-			statement.executeUpdate(query);
-			closeConnectionToDatabase();
-			return true;
-		} else {
-			closeConnectionToDatabase();
-			return false;
-		}
+		return dbBookQueries.deleteBookQuery(title, amount, this);
 	}
 
 	@Override
 	public String printBookList() throws SQLException {
-		Connection connection = createConnectionToDatabase(root, rootPassword);
-		ResultSet res = resSet;
-		statement = connection.createStatement();
-		res = statement.executeQuery("SELECT * FROM library.books");
-		String resultOfQuery = "Book Title\t\tAmount stocked\t\t Rating\n";
-		while (res.next())
-			resultOfQuery += res.getString("title") + "   \t\t" + res.getString("inStock") + " \t"
-					+ res.getDouble("rating") + "\n";
-		return resultOfQuery;
+		return dbBookQueries.printBookListQuery(this);
 	}
 
 	@Override
 	public boolean bookExisting(String name) throws SQLException {
-		Connection connection = createConnectionToDatabase(root, rootPassword);
-		ResultSet res = resSet;
-		statement = connection.createStatement();
-		res = statement.executeQuery("SELECT * FROM library.books");
-		String resultOfQuery = "Book Title\t\tAmount stocked\t\t Rating\n";
-		while (res.next())
-			if (name.equals(res.getString("title"))) {
-				return true;
-			}
-		return false;
+		return dbBookQueries.bookExistingQuery(name, this);
+	}
+
+	@Override
+	public boolean alreadyBorrowed(String title, String customerName) throws SQLException {
+		return dbBorrowQueries.alreadyBorrowedQuery(title, customerName, this);
+	}
+
+	@Override
+	public boolean addBorrowInformation(String nameOfCustomer, String title) throws SQLException{
+		return dbBorrowQueries.addBorrowInformationQuery(nameOfCustomer, title, this);
+	}
+
+	@Override
+	public boolean returnBookInformation(String nameOfCustomer, String title) throws SQLException {
+		return dbBorrowQueries.returnBookInformationQuery(nameOfCustomer, title, this);
+	}
+
+	@Override
+	public String getDueDate(String nameOfCustomer, String title) throws SQLException{
+		return dbBorrowQueries.getDueDateQuery(nameOfCustomer, title, this);
+	}
+
+	@Override
+	public boolean isOnTime(String nameOfCustomer, String title) throws SQLException, ParseException {
+		return dbBorrowQueries.isOnTimeQuery(nameOfCustomer, title, this);
+	}
+
+	public Statement getStatement() {
+		return statement;
+	}
+
+	public void setStatement(Statement statement) {
+		this.statement = statement;
+	}
+
+	public static ResultSet getResSet() {
+		return resSet;
+	}
+
+	public static void setResSet(ResultSet resSet) {
+		DbConnector.resSet = resSet;
+	}
+
+	public static Connection getConnection() {
+		return connection;
+	}
+
+	public static void setConnection(Connection connection) {
+		DbConnector.connection = connection;
+	}
+
+	public String getQuery() {
+		return query;
+	}
+
+	public void setQuery(String query) {
+		this.query = query;
+	}
+
+	public String getRoot() {
+		return root;
+	}
+
+	public String getRootPassword() {
+		return rootPassword;
+	}
+
+	public BorrowTimer getBt() {
+		return bt;
+	}
+
+	public void setBt(BorrowTimer bt) {
+		this.bt = bt;
 	}
 }

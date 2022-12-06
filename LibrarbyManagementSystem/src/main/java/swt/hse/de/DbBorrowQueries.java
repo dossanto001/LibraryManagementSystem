@@ -1,0 +1,65 @@
+package swt.hse.de;
+
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+public class DbBorrowQueries {
+    boolean alreadyBorrowedQuery(String title, String customerName, DbConnector dbConnector) throws SQLException {
+        DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
+        dbConnector.setStatement(DbConnector.getConnection().createStatement());
+        DbConnector.setResSet(dbConnector.getStatement().executeQuery("SELECT * FROM borrowed"));
+        while (DbConnector.getResSet().next())
+            if (title.equals(DbConnector.getResSet().getString("book")) && customerName.equalsIgnoreCase(DbConnector.getResSet().getString("customer"))) {
+                return true;
+            }
+        return false;
+    }
+
+    boolean addBorrowInformationQuery(String nameOfCustomer, String title, DbConnector dbConnector) throws SQLException {
+        DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
+        dbConnector.setStatement(DbConnector.getConnection().createStatement());
+        String dueDate = dbConnector.getBt().borrowForTime(7);
+        dbConnector.setQuery("INSERT INTO borrowed (customer, book, duedate) VALUES ('" + nameOfCustomer + "','" + title + "','"
+                +  dueDate + "');");
+        dbConnector.setStatement(DbConnector.getConnection().createStatement());
+        dbConnector.getStatement().executeUpdate(dbConnector.getQuery());
+        return true;
+    }
+
+    boolean returnBookInformationQuery(String nameOfCustomer, String title, DbConnector dbConnector) throws SQLException {
+        DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
+        dbConnector.setStatement(DbConnector.getConnection().createStatement());
+        dbConnector.setQuery("DELETE FROM borrowed WHERE customer='" + nameOfCustomer + "' AND book='" + title + "';");
+        dbConnector.getStatement().executeUpdate(dbConnector.getQuery());
+        return true;
+    }
+
+    String getDueDateQuery(String nameOfCustomer, String title, DbConnector dbConnector) throws SQLException {
+        DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
+        dbConnector.setStatement(DbConnector.getConnection().createStatement());
+        dbConnector.setQuery("SELECT duedate FROM borrowed WHERE customer='" + nameOfCustomer + "' AND book='" + title + "';");
+        DbConnector.setResSet(dbConnector.getStatement().executeQuery(dbConnector.getQuery()));
+        String dueDate;
+        if(DbConnector.getResSet().next()){
+            dueDate = DbConnector.getResSet().getString("duedate");
+        } else
+            dueDate = DbConnector.getResSet().getString("duedate");
+        return dueDate;
+    }
+
+    boolean isOnTimeQuery(String nameOfCustomer, String title, DbConnector dbConnector) throws SQLException, ParseException {
+        String dueDate = dbConnector.getDueDate(nameOfCustomer, title);
+        Date date = Calendar.getInstance().getTime();
+        DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+        String today = dateFormat.format(date);
+        if(dateFormat.parse(today).before(dateFormat.parse(dueDate)) ||
+                dateFormat.parse(today).equals(dateFormat.parse(dueDate))){
+            return true;
+        } else
+            return false;
+    }
+}
