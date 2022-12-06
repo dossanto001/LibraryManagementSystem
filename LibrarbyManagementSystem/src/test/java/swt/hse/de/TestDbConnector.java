@@ -7,14 +7,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.postgresql.util.PSQLException;
 
 import static org.junit.Assert.*;
 
 @RunWith(JUnit4.class)
 public class TestDbConnector {
 
-	DbConnector db;
+	IDbConnector db;
 
 	@Before
 	public void setup() {
@@ -36,7 +35,7 @@ public class TestDbConnector {
 	@Test
 	public void testCreateBook() throws SQLException  {
 		Book book = new Book("name", "auth", 1222, 2, "pub", 0);
-		assertTrue(db.createBook(book);
+		assertTrue(db.createBook(book));
 	}
 
 	@Test
