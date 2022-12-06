@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DbConnectionFunction {
+public class DbConnectionFunctions {
     public static Connection createConnectionToDatabase(String name, String password, DbConnector dbConnector) {
         try {
             Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:49153/library", name, password);

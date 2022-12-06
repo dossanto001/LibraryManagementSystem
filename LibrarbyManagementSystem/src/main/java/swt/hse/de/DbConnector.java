@@ -14,93 +14,93 @@ public class DbConnector implements IDbConnector {
 	private static ResultSet resSet;
 	public String connectionString;
 	private BorrowTimer bt = new BorrowTimer();
-	private DbBookFunctions dbBookQueries = new DbBookFunctions();
-	private DbBorrowQueries dbBorrowQueries = new DbBorrowQueries();
+	private DbBookFunctions dbBookFunctions = new DbBookFunctions();
+	private DbBorrowFunctions dbBorrowFunctions = new DbBorrowFunctions();
 	private String query;
 
 	@Override
 	public Connection createConnectionToDatabase(String name, String password) {
-		return DbConnectionFunction.createConnectionToDatabase(name, password, this);
+		return DbConnectionFunctions.createConnectionToDatabase(name, password, this);
 	}
 
 	@Override
 	public void closeConnectionToDatabase() throws SQLException {
-		DbConnectionFunction.closeConnectionToDatabase(this);
+		DbConnectionFunctions.closeConnectionToDatabase(this);
 	}
 
 	@Override
 	public int getBookAvailable(String title) throws SQLException {
-		return dbBookQueries.getValuesFromBookQuery("bookAvailable", title, this);
+		return dbBookFunctions.getValuesFromBook("bookAvailable", title, this);
 	}
 
 	@Override
 	public int getInStock(String title) throws SQLException {
-		return dbBookQueries.getValuesFromBookQuery("inStock", title, this);
+		return dbBookFunctions.getValuesFromBook("inStock", title, this);
 	}
 
 	@Override
 	public int getBorrowCount(String title) throws SQLException {
-		return dbBookQueries.getValuesFromBookQuery("borrowCount", title, this);
+		return dbBookFunctions.getValuesFromBook("borrowCount", title, this);
 	}
 
 	@Override
 	public double getRating(String title) throws SQLException {
-		return dbBookQueries.getValuesFromBookQuery("rating", title, this);
+		return dbBookFunctions.getValuesFromBook("rating", title, this);
 	}
 
 	@Override
 	public boolean createBook(Book book) throws SQLException {
-		return dbBookQueries.createBookQuery(book, this);
+		return dbBookFunctions.createBook(book, this);
 	}
 
 	@Override
 	public void borrowBook(String nameOfCustomer, String title) throws SQLException {
-		dbBookQueries.borrowBookQuery(nameOfCustomer, title, this);
+		dbBookFunctions.borrowBook(nameOfCustomer, title, this);
 	}
 
 	@Override
 	public void returnBook(String title, double rating, String nameOfCustomer) throws SQLException {
-		dbBookQueries.returnBookQuery(title, rating, nameOfCustomer, this);
+		dbBookFunctions.returnBook(title, rating, nameOfCustomer, this);
 	}
 
 	@Override
 	public boolean deleteBook(String title, int amount) throws SQLException {
-		return dbBookQueries.deleteBookQuery(title, amount, this);
+		return dbBookFunctions.deleteBook(title, amount, this);
 	}
 
 	@Override
 	public String printBookList() throws SQLException {
-		return dbBookQueries.printBookListQuery(this);
+		return dbBookFunctions.printBookList(this);
 	}
 
 	@Override
 	public boolean bookExisting(String name) throws SQLException {
-		return dbBookQueries.bookExistingQuery(name, this);
+		return dbBookFunctions.bookExisting(name, this);
 	}
 
 	@Override
 	public boolean alreadyBorrowed(String title, String customerName) throws SQLException {
-		return dbBorrowQueries.alreadyBorrowedQuery(title, customerName, this);
+		return dbBorrowFunctions.alreadyBorrowed(title, customerName, this);
 	}
 
 	@Override
 	public boolean addBorrowInformation(String nameOfCustomer, String title) throws SQLException{
-		return dbBorrowQueries.addBorrowInformationQuery(nameOfCustomer, title, this);
+		return dbBorrowFunctions.addBorrowInformation(nameOfCustomer, title, this);
 	}
 
 	@Override
 	public boolean returnBookInformation(String nameOfCustomer, String title) throws SQLException {
-		return dbBorrowQueries.returnBookInformationQuery(nameOfCustomer, title, this);
+		return dbBorrowFunctions.returnBookInformation(nameOfCustomer, title, this);
 	}
 
 	@Override
 	public String getDueDate(String nameOfCustomer, String title) throws SQLException{
-		return dbBorrowQueries.getDueDateQuery(nameOfCustomer, title, this);
+		return dbBorrowFunctions.getDueDate(nameOfCustomer, title, this);
 	}
 
 	@Override
 	public boolean isOnTime(String nameOfCustomer, String title) throws SQLException, ParseException {
-		return dbBorrowQueries.isOnTimeQuery(nameOfCustomer, title, this);
+		return dbBorrowFunctions.isOnTime(nameOfCustomer, title, this);
 	}
 
 	public Statement getStatement() {
