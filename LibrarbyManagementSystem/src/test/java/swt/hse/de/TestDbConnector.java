@@ -7,24 +7,37 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.postgresql.util.PSQLException;
+import org.postgresql.util.PSQLState;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-@RunWith(JUnit4.class)
+@RunWith(MockitoJUnitRunner.class)
 public class TestDbConnector {
 
-	DbConnector db;
+	@Mock
+	private DbConnector mock = new DbConnector();
+
+	private DbConnector db;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		db = new DbConnector();
 	}
 
 	@Test
 	public void testConnectionFail() throws SQLException  {
-		assertNull(db.createConnectionToDatabase("WrongUserName", "postgrespw"));
-		db.closeConnectionToDatabase();
+		assertNull(db.createConnectionToDatabase("wrong", "pw"));
+	}
+
+	@Test
+	public void testConnectionFailMock() throws SQLException  {
+		when(mock.createConnectionToDatabase("wrong", "pw")).thenReturn(null);
 	}
 
 	@Test
