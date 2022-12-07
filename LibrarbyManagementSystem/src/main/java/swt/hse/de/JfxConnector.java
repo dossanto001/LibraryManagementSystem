@@ -47,7 +47,7 @@ public class JfxConnector {
 	public void deleteBookButton() throws SQLException {
 		String title = nameOfBook.getText();
 		if(db.getInStock(title) > 0) {
-			db.deleteBook(title, Integer.parseInt(amount.getText()));
+			db.deleteBook(title, Integer.parseInt(amount.getText()), 0);
 			JOptionPane.showInternalMessageDialog(null, "book(s) have been deleted");
 		}
 		else

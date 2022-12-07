@@ -99,7 +99,7 @@ public class DbConnector {
 		Connection connection = createConnectionToDatabase(root, rootPassword);
 		ResultSet res = resSet;
 		statement = connection.createStatement();
-		res = statement.executeQuery("SELECT * FROM borrowed");
+		res = statement.executeQuery("SELECT * FROM library.borrowed");
 		while (res.next())
 			if (title.equals(res.getString("book")) && customerName.equalsIgnoreCase(res.getString("customer"))) {
 				return true;
@@ -111,7 +111,7 @@ public class DbConnector {
 		Connection connection = createConnectionToDatabase(root, rootPassword);
 		statement = connection.createStatement();
 		String dueDate = bt.borrowForTime(7);
-		String query = "INSERT INTO borrowed (customer, book, duedate) VALUES ('" + nameOfCustomer + "','" + title + "','"
+		String query = "INSERT INTO library.borrowed (customer, book, duedate) VALUES ('" + nameOfCustomer + "','" + title + "','"
 				+  dueDate + "');";
 		statement = connection.createStatement();
 		statement.executeUpdate(query);
@@ -121,7 +121,7 @@ public class DbConnector {
 	public boolean returnBookInformation(String nameOfCustomer, String title) throws SQLException {
 		Connection connection = createConnectionToDatabase(root, rootPassword);
 		statement = connection.createStatement();
-		String query = "DELETE FROM borrowed WHERE customer='" + nameOfCustomer + "' AND book='" + title + "';";
+		String query = "DELETE FROM library.borrowed WHERE customer='" + nameOfCustomer + "' AND book='" + title + "';";
 		statement.executeUpdate(query);
 		return true;
 	}
@@ -130,7 +130,7 @@ public class DbConnector {
 		Connection connection = createConnectionToDatabase(root, rootPassword);
 		statement = connection.createStatement();
 		ResultSet res = resSet;
-		String query = "SELECT duedate FROM borrowed WHERE customer='" + nameOfCustomer + "' AND book='" + title + "';";
+		String query = "SELECT duedate FROM library.borrowed WHERE customer='" + nameOfCustomer + "' AND book='" + title + "';";
 		res = statement.executeQuery(query);
 		String dueDate;
 		if(res.next()){

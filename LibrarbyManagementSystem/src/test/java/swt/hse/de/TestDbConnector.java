@@ -20,8 +20,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class TestDbConnector {
 
-	@Mock
-	private DbConnector mock = new DbConnector();
+//	@Mock
+//	private DbConnector mock = new DbConnector();
 
 	private DbConnector db;
 
@@ -35,10 +35,10 @@ public class TestDbConnector {
 		assertNull(db.createConnectionToDatabase("wrong", "pw"));
 	}
 
-	@Test
-	public void testConnectionFailMock() throws SQLException  {
-		when(mock.createConnectionToDatabase("wrong", "pw")).thenReturn(null);
-	}
+//	@Test
+//	public void testConnectionFailMock() throws SQLException  {
+//		when(mock.createConnectionToDatabase("wrong", "pw")).thenReturn(null);
+//	}
 
 	@Test
 	public void testConnectionSuccess() throws SQLException {
@@ -76,6 +76,7 @@ public class TestDbConnector {
 
 	@Test
 	public void testBookExistingSuccess() throws SQLException  {
+		db.createBook(new Book("name", "auth", 1222, 2, "pub", 0));
 		assertTrue(db.bookExisting("name"));
 	}
 
