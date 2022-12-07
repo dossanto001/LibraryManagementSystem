@@ -7,24 +7,38 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.postgresql.util.PSQLException;
+import org.postgresql.util.PSQLState;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-@RunWith(JUnit4.class)
+@RunWith(MockitoJUnitRunner.class)
 public class TestDbConnector {
 
+//	@Mock
+//	private DbConnector mock = new DbConnector();
+
+	private DbConnector db;
 	IDbConnector db;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		db = new DbConnector();
 	}
 
 	@Test
 	public void testConnectionFail() throws SQLException  {
-		assertNull(db.createConnectionToDatabase("WrongUserName", "postgrespw"));
-		db.closeConnectionToDatabase();
+		assertNull(db.createConnectionToDatabase("wrong", "pw"));
 	}
+
+//	@Test
+//	public void testConnectionFailMock() throws SQLException  {
+//		when(mock.createConnectionToDatabase("wrong", "pw")).thenReturn(null);
+//	}
 
 	@Test
 	public void testConnectionSuccess() throws SQLException {
@@ -34,31 +48,30 @@ public class TestDbConnector {
 
 	@Test
 	public void testCreateBook() throws SQLException  {
-		Book book = new Book("name", "auth", 1222, 2, "pub", 0);
-		assertTrue(db.createBook(book));
+		db.truncateTable();
+		assertTrue(db.createBook(new Book("name3", "auth", 1222, 2, "pub", 0)));
 	}
 
 	@Test
 	public void testCreateExistingBook() throws SQLException {
-		Book book = new Book("name2", "auth", 1222, 2, "pub", 0);
-		db.createBook(book);
-		assertTrue(db.createBook(new Book("name2", "auth", 1222, 2, "pub", 0)));
+		db.createBook(new Book("name2", "auth", 1222, 2, "pub", 0));
+		assertTrue(db.createBook(new Book("name2", "auth", 1222, 3, "pub", 2)));
 	}
 
 	@Test
 	public void testDeleteBookTrue() throws SQLException{
 		db.createBook(new Book("name", "auth", 1222, 2, "pub", 0));
-		assertTrue(db.deleteBook("name", 1));
+		assertTrue(db.deleteBook("name", 1, 0));
 	}
 
 	@Test
-	public void testDeleteBookFalse() throws SQLException{
-		assertFalse(db.deleteBook("name", 1));
+	public void testDeleteBookDecline() throws SQLException{
+		assertFalse(db.deleteBook("name", 1, 1));
 	}
 
 	@Test
 	public void testDeleteBookFail() throws SQLException  {
-		assertFalse(db.deleteBook("no book with this name", 1));
+		assertFalse(db.deleteBook("no book with this name", 1, 0));
 	}
 
 	@Test
@@ -109,4 +122,44 @@ public class TestDbConnector {
 		assertTrue(db.isOnTime("name", "title6"));
 	}
 
+	@Test
+	public void testBorrowBookFail () throws SQLException {
+		assertFalse(db.borrowBook("test", "notABook"));
+	}
+
+	@Test
+	public void testBorrowBookTrue() throws SQLException {
+		db.createBook(new Book("name", "auth", 1222, 2, "pub", 2));
+		assertTrue(db.borrowBook("Customer", "name"));
+	}
+
+	@Test
+	public void testBorrowBookTrueAnd1inStock() throws SQLException {
+		db.createBook(new Book("name", "auth", 1222, 2, "pub", 1));
+		assertTrue(db.borrowBook("Customer", "name"));
+	}
+
+	@Test
+	public void testPrintBookList() throws SQLException {
+		db.truncateTable();
+		assertEquals("Book Title\t\tAmount stocked\t\t Rating\n", db.printBookList());
+	}
+
+	@Test
+	public void testBookCount() throws SQLException {
+		db.truncateTable();
+		db.createBook(new Book("count", "auth", 1222, 2, "pub", 11));
+		for(int i = 0; i < 10; i++) {
+			db.borrowBook("Customer", "count");
+		}
+		assertEquals(10, db.getBorrowCount("count"));
+	}
+
+	@Test
+	public void testGetRating() throws SQLException {
+		db.truncateTable();
+		db.createBook(new Book("rating", "auth", 1222, 2, "pub", 11));
+		db.borrowBook("Customer", "rating");
+		assertEquals(3.5,db.returnBook("rating", 3.5, "Customer"), 0.1);
+	}
 }
