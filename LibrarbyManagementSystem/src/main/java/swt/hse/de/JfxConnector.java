@@ -14,7 +14,7 @@ public class JfxConnector {
 	//create a new run config of type "maven", select this project folder as workspace target and
 	//for goals use "clean javafx:run", then click Apply and after that -> run.
 	
-	DbConnector db = new DbConnector();
+	IDbConnector db = new DbConnector();
 	BorrowTimer bt = new BorrowTimer();
 	
 	@FXML
