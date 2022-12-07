@@ -157,25 +157,29 @@ public class DbConnector {
 
 	}
 
-	public void borrowBook(String nameOfCustomer, String title) throws SQLException {
+	public boolean borrowBook(String nameOfCustomer, String title) throws SQLException {
+		boolean state = false;
 		Connection connection = createConnectionToDatabase(root, rootPassword);
 		statement = connection.createStatement();
 		String query = "";
-		if (getBookAvailable(title) == 0 && getInStock(title) != 1) {
+		if (getBookAvailable(title) == 0 && getInStock(title) > 1) {
 			query = "UPDATE library.books SET borrowCount = borrowCount + 1, inStock = inStock -1 " + "WHERE title='"
 					+ title + "' AND NOT inStock = 0;";
 			addBorrowInformation(nameOfCustomer,title);
+			state = true;
 		} else if (getBookAvailable(title) == 0 && getInStock(title) == 1) {
 			query = "UPDATE library.books SET borrowCount = borrowCount + 1, inStock = inStock -1, bookAvailable = 0 "
-					+ "WHERE title='" + title + "' AND NOT inStock = 0 ;";
+					+ "WHERE title='" + title + "' AND NOT inStock = 0;";
 			addBorrowInformation(nameOfCustomer,title);
+			state = true;
 		} else
 			query = "";
 		statement.executeUpdate(query);
 		closeConnectionToDatabase();
+		return state;
 	}
 
-	public void returnBook(String title, double rating, String nameOfCustomer) throws SQLException {
+	public double returnBook(String title, double rating, String nameOfCustomer) throws SQLException {
 		Connection connection = createConnectionToDatabase(root, rootPassword);
 		double oldRating = getRating(title);
 		int count = getBorrowCount(title);
@@ -187,6 +191,7 @@ public class DbConnector {
 		statement = connection.createStatement();
 		statement.executeUpdate(query);
 		closeConnectionToDatabase();
+		return newRating;
 	}
 
 	public boolean deleteBook(String title, int amount, int option) throws SQLException {

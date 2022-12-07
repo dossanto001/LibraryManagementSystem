@@ -122,4 +122,44 @@ public class TestDbConnector {
 		assertTrue(db.isOnTime("name", "title6"));
 	}
 
+	@Test
+	public void testBorrowBookFail () throws SQLException {
+		assertFalse(db.borrowBook("test", "notABook"));
+	}
+
+	@Test
+	public void testBorrowBookTrue() throws SQLException {
+		db.createBook(new Book("name", "auth", 1222, 2, "pub", 2));
+		assertTrue(db.borrowBook("Customer", "name"));
+	}
+
+	@Test
+	public void testBorrowBookTrueAnd1inStock() throws SQLException {
+		db.createBook(new Book("name", "auth", 1222, 2, "pub", 1));
+		assertTrue(db.borrowBook("Customer", "name"));
+	}
+
+	@Test
+	public void testPrintBookList() throws SQLException {
+		db.truncateTable();
+		assertEquals("Book Title\t\tAmount stocked\t\t Rating\n", db.printBookList());
+	}
+
+	@Test
+	public void testBookCount() throws SQLException {
+		db.truncateTable();
+		db.createBook(new Book("count", "auth", 1222, 2, "pub", 11));
+		for(int i = 0; i < 10; i++) {
+			db.borrowBook("Customer", "count");
+		}
+		assertEquals(10, db.getBorrowCount("count"));
+	}
+
+	@Test
+	public void testGetRating() throws SQLException {
+		db.truncateTable();
+		db.createBook(new Book("rating", "auth", 1222, 2, "pub", 11));
+		db.borrowBook("Customer", "rating");
+		assertEquals(3.5,db.returnBook("rating", 3.5, "Customer"), 0.1);
+	}
 }
