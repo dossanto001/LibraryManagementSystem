@@ -48,29 +48,30 @@ public class TestDbConnector {
 
 	@Test
 	public void testCreateBook() throws SQLException  {
+		db.truncateTable();
 		assertTrue(db.createBook(new Book("name3", "auth", 1222, 2, "pub", 0)));
 	}
 
 	@Test
 	public void testCreateExistingBook() throws SQLException {
 		db.createBook(new Book("name2", "auth", 1222, 2, "pub", 0));
-		assertTrue(db.createBook(new Book("name2", "auth", 1222, 2, "pub", 0)));
+		assertTrue(db.createBook(new Book("name2", "auth", 1222, 3, "pub", 2)));
 	}
 
 	@Test
 	public void testDeleteBookTrue() throws SQLException{
 		db.createBook(new Book("name", "auth", 1222, 2, "pub", 0));
-		assertTrue(db.deleteBook("name", 1));
+		assertTrue(db.deleteBook("name", 1, 0));
 	}
 
 	@Test
-	public void testDeleteBookFalse() throws SQLException{
-		assertFalse(db.deleteBook("name", 1));
+	public void testDeleteBookDecline() throws SQLException{
+		assertFalse(db.deleteBook("name", 1, 1));
 	}
 
 	@Test
 	public void testDeleteBookFail() throws SQLException  {
-		assertFalse(db.deleteBook("no book with this name", 1));
+		assertFalse(db.deleteBook("no book with this name", 1, 0));
 	}
 
 	@Test

@@ -83,7 +83,7 @@ public class DbConnector {
 		if (bookExisting(book.getTitle())) {
 			query = "UPDATE library.books SET title='" + book.getTitle() + "', author='" + book.getAuthor() +
 					"', year='" + book.getYear() + "', edition='" + book.getEdition() + "', publisher='" +
-					book.getPublisher() + "', instock='"+ book.getInStock() + "'";
+					book.getPublisher() + "', instock='"+ book.getInStock() + "' WHERE title='"+ book.getTitle() +"'";
 		} else {
 			query = "INSERT INTO library.books (title, author, year, edition, publisher, inStock, bookAvailable, borrowCount, rating) "
 					+ "VALUES ('" + book.getTitle() + "','" + book.getAuthor() + "','" + book.getYear() + "','" + book.getEdition() + "','" + book.getPublisher() + "','"
@@ -189,9 +189,11 @@ public class DbConnector {
 		closeConnectionToDatabase();
 	}
 
-	public boolean deleteBook(String title, int amount) throws SQLException {
-		int option = JOptionPane.showConfirmDialog(null, "Do you want to delete " +
-				amount + " pieces of " + title + "?");
+	public boolean deleteBook(String title, int amount, int option) throws SQLException {
+		if (option == 3) {
+			option = JOptionPane.showConfirmDialog(null, "Do you want to delete " +
+					amount + " copies of " + title + "?");
+		}
 		if (option == 1 || option == 2) {
 			return false;
 		}
@@ -234,6 +236,19 @@ public class DbConnector {
 				return true;
 			}
 		return false;
+	}
+
+	public void truncateTable() {
+		Connection c = connection;
+		Statement stmt = statement;
+		try {
+			c = createConnectionToDatabase(root, rootPassword);
+			stmt = c.createStatement();
+			stmt.executeUpdate("truncate library.books;");
+			closeConnectionToDatabase();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void closeConnectionToDatabase() throws SQLException {
