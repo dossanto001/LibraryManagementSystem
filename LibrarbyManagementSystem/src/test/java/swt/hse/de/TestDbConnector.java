@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.postgresql.util.PSQLException;
 import org.postgresql.util.PSQLState;
-
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -24,6 +23,7 @@ public class TestDbConnector {
 //	private DbConnector mock = new DbConnector();
 
 	private DbConnector db;
+	IDbConnector db;
 
 	@Before
 	public void setUp() {
