@@ -11,7 +11,7 @@ public class DbBorrowFunctions {
     boolean alreadyBorrowed(String title, String customerName, DbConnector dbConnector) throws SQLException {
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
         dbConnector.setStatement(DbConnector.getConnection().createStatement());
-        DbConnector.setResSet(dbConnector.getStatement().executeQuery("SELECT * FROM borrowed"));
+        DbConnector.setResSet(dbConnector.getStatement().executeQuery("SELECT * FROM library.borrowed"));
         while (DbConnector.getResSet().next())
             if (title.equals(DbConnector.getResSet().getString("book")) && customerName.equalsIgnoreCase(DbConnector.getResSet().getString("customer"))) {
                 return true;
@@ -23,7 +23,7 @@ public class DbBorrowFunctions {
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
         dbConnector.setStatement(DbConnector.getConnection().createStatement());
         String dueDate = dbConnector.getBt().borrowForTime(7);
-        dbConnector.setQuery("INSERT INTO borrowed (customer, book, duedate) VALUES ('" + nameOfCustomer + "','" + title + "','"
+        dbConnector.setQuery("INSERT INTO library.borrowed (customer, book, duedate) VALUES ('" + nameOfCustomer + "','" + title + "','"
                 +  dueDate + "');");
         dbConnector.setStatement(DbConnector.getConnection().createStatement());
         dbConnector.getStatement().executeUpdate(dbConnector.getQuery());
@@ -33,7 +33,7 @@ public class DbBorrowFunctions {
     boolean returnBookInformation(String nameOfCustomer, String title, DbConnector dbConnector) throws SQLException {
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
         dbConnector.setStatement(DbConnector.getConnection().createStatement());
-        dbConnector.setQuery("DELETE FROM borrowed WHERE customer='" + nameOfCustomer + "' AND book='" + title + "';");
+        dbConnector.setQuery("DELETE FROM library.borrowed WHERE customer='" + nameOfCustomer + "' AND book='" + title + "';");
         dbConnector.getStatement().executeUpdate(dbConnector.getQuery());
         return true;
     }
@@ -41,7 +41,7 @@ public class DbBorrowFunctions {
     String getDueDate(String nameOfCustomer, String title, DbConnector dbConnector) throws SQLException {
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
         dbConnector.setStatement(DbConnector.getConnection().createStatement());
-        dbConnector.setQuery("SELECT duedate FROM borrowed WHERE customer='" + nameOfCustomer + "' AND book='" + title + "';");
+        dbConnector.setQuery("SELECT duedate FROM library.borrowed WHERE customer='" + nameOfCustomer + "' AND book='" + title + "';");
         DbConnector.setResSet(dbConnector.getStatement().executeQuery(dbConnector.getQuery()));
         String dueDate;
         if(DbConnector.getResSet().next()){

@@ -63,6 +63,7 @@ public class TestDbConnector {
 
 	@Test
 	public void testBookExistingSuccess() throws SQLException  {
+		db.createBook(new Book("name", "auth", 1222, 2, "pub", 0));
 		assertTrue(db.bookExisting("name"));
 	}
 
