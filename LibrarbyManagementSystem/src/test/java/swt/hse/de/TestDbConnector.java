@@ -23,7 +23,7 @@ public class TestDbConnector {
 //	private DbConnector mock = new DbConnector();
 
 	private DbConnector db;
-	IDbConnector db;
+	IDbConnector dbI;
 
 	@Before
 	public void setUp() {
@@ -148,18 +148,18 @@ public class TestDbConnector {
 	@Test
 	public void testBookCount() throws SQLException {
 		db.truncateTable();
-		db.createBook(new Book("count", "auth", 1222, 2, "pub", 11));
-		for(int i = 0; i < 10; i++) {
+		db.createBook(new Book("count", "auth", 1222, 2, "pub", 4));
+		for(int i = 0; i < 4; i++) {
 			db.borrowBook("Customer", "count");
 		}
-		assertEquals(10, db.getBorrowCount("count"));
+		assertEquals(4, db.getBorrowCount("count"));
 	}
-
 	@Test
 	public void testGetRating() throws SQLException {
 		db.truncateTable();
-		db.createBook(new Book("rating", "auth", 1222, 2, "pub", 11));
+		db.createBook(new Book("rating", "auth", 1222, 2, "pub", 3));
 		db.borrowBook("Customer", "rating");
+		db.returnBook("rating", 3.5, "Customer");
 		assertEquals(3.5,db.returnBook("rating", 3.5, "Customer"), 0.1);
 	}
 }

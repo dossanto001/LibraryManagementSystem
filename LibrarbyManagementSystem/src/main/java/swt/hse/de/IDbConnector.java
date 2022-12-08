@@ -28,15 +28,17 @@ public interface IDbConnector {
 
     boolean isOnTime(String nameOfCustomer, String title) throws SQLException, ParseException;
 
-    void borrowBook(String nameOfCustomer, String title) throws SQLException;
+    boolean borrowBook(String nameOfCustomer, String title) throws SQLException;
 
-    void returnBook(String title, double rating, String nameOfCustomer) throws SQLException;
+    double returnBook(String title, double rating, String nameOfCustomer) throws SQLException;
 
-    boolean deleteBook(String title, int amount) throws SQLException;
+    boolean deleteBook(String title, int amount, int option) throws SQLException;
 
     String printBookList() throws SQLException;
 
     boolean bookExisting(String name) throws SQLException;
 
     void closeConnectionToDatabase() throws SQLException;
+
+    void truncateTable();
 }

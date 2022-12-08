@@ -1,7 +1,9 @@
 package swt.hse.de;
 
 import javax.swing.*;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DbBookFunctions {
     public static boolean createBook(Book book, DbConnector dbConnector) throws SQLException {
@@ -31,41 +33,48 @@ public class DbBookFunctions {
         return queryResult;
     }
 
-    public static void borrowBook(String nameOfCustomer, String title, DbConnector dbConnector) throws SQLException {
+    public static boolean borrowBook(String nameOfCustomer, String title, DbConnector dbConnector) throws SQLException {
+        boolean status = false;
+        String query = "";
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
         dbConnector.setStatement(DbConnector.getConnection().createStatement());
         if (dbConnector.getBookAvailable(title) == 0 && dbConnector.getInStock(title) != 1) {
-            dbConnector.setQuery("UPDATE library.books SET borrowCount = borrowCount + 1, inStock = inStock -1 " + "WHERE title='"
-                    + title + "' AND NOT inStock = 0;");
+            query = "UPDATE library.books SET borrowCount = borrowCount + 1, inStock = inStock -1 " + "WHERE title='"
+                    + title + "' AND NOT inStock = 0;";
             dbConnector.addBorrowInformation(nameOfCustomer, title);
+            status = true;
         } else if (dbConnector.getBookAvailable(title) == 0 && dbConnector.getInStock(title) == 1) {
-            dbConnector.setQuery("UPDATE library.books SET borrowCount = borrowCount + 1, inStock = inStock -1, bookAvailable = 0 "
-                    + "WHERE title='" + title + "' AND NOT inStock = 0 ;");
+            query = "UPDATE library.books SET borrowCount = borrowCount + 1, inStock = inStock -1, bookAvailable = 0 "
+                    + "WHERE title='" + title + "' AND NOT inStock = 0 ;";
             dbConnector.addBorrowInformation(nameOfCustomer, title);
+            status = true;
         } else
             dbConnector.setQuery("");
-        dbConnector.getStatement().executeUpdate(dbConnector.getQuery());
+        dbConnector.getStatement().executeUpdate(query);
         dbConnector.closeConnectionToDatabase();
+        return status;
     }
 
-    public static void returnBook(String title, double rating, String nameOfCustomer, DbConnector dbConnector) throws SQLException {
+    public double returnBook(String title, double rating, String nameOfCustomer, DbConnector dbConnector) throws SQLException {
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
         double oldRating = dbConnector.getRating(title);
         int count = dbConnector.getBorrowCount(title);
         double newRating = (oldRating * ((double) count - 1.0) + rating) / (double) count;
 
-        dbConnector.setQuery("UPDATE library.books SET inStock = inStock + 1, rating = '" + newRating + "' WHERE title='" + title
-                + "';");
+        String q = "UPDATE library.books SET inStock = inStock + 1, rating = '" + newRating + "' WHERE title='" + title
+                + "';";
         dbConnector.returnBookInformation(nameOfCustomer, title);
         dbConnector.setStatement(DbConnector.getConnection().createStatement());
-        dbConnector.getStatement().executeUpdate(dbConnector.getQuery());
+        dbConnector.getStatement().executeUpdate(q);
         dbConnector.closeConnectionToDatabase();
+        return newRating;
     }
 
-    public static boolean deleteBook(String title, int amount, DbConnector dbConnector) throws SQLException {
-        int option = JOptionPane.showConfirmDialog(null, "Do you want to delete " +
-                amount + " pieces of " + title + "?");
-        if (option == 1 || option == 2) {
+    public boolean deleteBook(String title, int amount, DbConnector dbConnector, int option) throws SQLException {
+        if (option == 3) {
+            option = JOptionPane.showConfirmDialog(null, "Do you want to delete " +
+                    amount + " copies of " + title + "?");
+        } else if (option == 1 || option == 2) {
             return false;
         }
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
@@ -99,10 +108,20 @@ public class DbBookFunctions {
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
         dbConnector.setStatement(DbConnector.getConnection().createStatement());
         DbConnector.setResSet(dbConnector.getStatement().executeQuery("SELECT * FROM library.books"));
-        //String resultOfQuery = "Book Title\t\tAmount stocked\t\t Rating\n";
+        String resultOfQuery = "Book Title\t\tAmount stocked\t\t Rating\n";
         while (DbConnector.getResSet().next())
             if (name.equals(DbConnector.getResSet().getString("title")))
                 return true;
         return false;
+    }
+
+    public static void truncateTable(DbConnector dbc) {
+        try {
+            DbConnector.setConnection(dbc.createConnectionToDatabase(dbc.getRoot(), dbc.getRootPassword()));
+            dbc.setStatement(DbConnector.getConnection().createStatement());
+            dbc.getStatement().executeUpdate("truncate library.books;");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

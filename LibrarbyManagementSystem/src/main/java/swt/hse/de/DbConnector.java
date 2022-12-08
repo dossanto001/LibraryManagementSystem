@@ -17,13 +17,15 @@ public class DbConnector implements IDbConnector {
 	private DbBorrowFunctions dbBorrowFunctions = new DbBorrowFunctions();
 	private String query;
 
+	private DbBookFunctions dbF = new DbBookFunctions();
+
 	@Override
 	public Connection createConnectionToDatabase(String name, String password) {
 		return DbConnectionFunctions.createConnectionToDatabase(name, password, this);
 	}
 
 	@Override
-	public void closeConnectionToDatabase() throws SQLException {
+	public void closeConnectionToDatabase() {
 		DbConnectionFunctions.closeConnectionToDatabase(this);
 	}
 
@@ -53,18 +55,18 @@ public class DbConnector implements IDbConnector {
 	}
 
 	@Override
-	public void borrowBook(String nameOfCustomer, String title) throws SQLException {
-		DbBookFunctions.borrowBook(nameOfCustomer, title, this);
+	public boolean borrowBook(String nameOfCustomer, String title) throws SQLException {
+		return DbBookFunctions.borrowBook(nameOfCustomer, title, this);
 	}
 
 	@Override
-	public void returnBook(String title, double rating, String nameOfCustomer) throws SQLException {
-		DbBookFunctions.returnBook(title, rating, nameOfCustomer, this);
+	public double returnBook(String title, double rating, String nameOfCustomer) throws SQLException {
+		return dbF.returnBook(title, rating, nameOfCustomer, this);
 	}
 
 	@Override
-	public boolean deleteBook(String title, int amount) throws SQLException {
-		return DbBookFunctions.deleteBook(title, amount, this);
+	public boolean deleteBook(String title, int amount, int option) throws SQLException {
+		return dbF.deleteBook(title, amount, this, option);
 	}
 
 	@Override
@@ -100,6 +102,11 @@ public class DbConnector implements IDbConnector {
 	@Override
 	public boolean isOnTime(String nameOfCustomer, String title) throws SQLException, ParseException {
 		return dbBorrowFunctions.isOnTime(nameOfCustomer, title, this);
+	}
+
+	@Override
+	public void truncateTable() {
+		DbBookFunctions.truncateTable(this);
 	}
 
 	public Statement getStatement() {
