@@ -11,16 +11,16 @@
     </content>
     <orderEntry type="jdk" jdkName="openjdk-15" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="javafx-sdk-19" level="project" />
+    <orderEntry type="library" exported="" name="javafx-sdk-19" level="project" />
     <orderEntry type="library" name="Maven: org.postgresql:postgresql:42.2.6" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:19" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:mac:19" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openjfx:javafx-controls:mac:19" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:19" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:mac:19" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openjfx:javafx-graphics:mac:19" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-base:19" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-base:mac:19" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openjfx:javafx-base:mac:19" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:19" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:mac:19" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openjfx:javafx-fxml:mac:19" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-engine:5.4.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apiguardian:apiguardian-api:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-engine:1.4.0" level="project" />
@@ -32,5 +32,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.assertj:assertj-core:3.13.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.testfx:testfx-junit:4.0.4-alpha" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.12" level="project" />
+    <orderEntry type="library" name="javafx11" level="application" />
   </component>
 </module>

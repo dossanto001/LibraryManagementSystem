@@ -68,8 +68,8 @@ public class JfxConnector {
 		Book book = new Book(nameOfBook.getText(), author.getText(), year.getText(),
 				edition.getText(), publisher.getText(), numberInStock.getText());
 		if(pt.checkAlphaNumeric(book.getTitle()) && pt.checkWord(book.getAuthor())
-				&& pt.checkYear((String.valueOf(book.getYear()))) && pt.checkNumber(String.valueOf(book.getEdition()))
-				&& pt.checkAlphaNumeric(book.getPublisher()) && pt.checkNumber(String.valueOf(book.getInStock()))){
+				&& pt.checkYear(year.getText()) && pt.checkNumber(edition.getText())
+				&& pt.checkAlphaNumeric(book.getPublisher()) && pt.checkNumber(numberInStock.getText())){
 			db.createBook(book);
 			JOptionPane.showInternalMessageDialog(null, "book(s) have been added");
 			searchBook.setText(db.printBookList());
