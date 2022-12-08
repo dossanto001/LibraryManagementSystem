@@ -14,7 +14,7 @@ public class JfxConnector {
 	//create a new run config of type "maven", select this project folder as workspace target and
 	//for goals use "clean javafx:run", then click Apply and after that -> run.
 	
-	DbConnector db = new DbConnector();
+	IDbConnector db = new DbConnector();
 	BorrowTimer bt = new BorrowTimer();
 
 	PatternChecking pt = new PatternChecking();
@@ -48,6 +48,7 @@ public class JfxConnector {
 	@FXML
 	public void deleteBookButton() throws SQLException {
 		String title = nameOfBook.getText();
+<<<<<<< feature/9-pattern-checking
 		if(pt.checkAlphaNumeric(title)){
 			if(db.getInStock(title) > 0) {
 				db.deleteBook(title, Integer.parseInt(amount.getText()));
@@ -59,6 +60,11 @@ public class JfxConnector {
 		}else{
 			JOptionPane.showInternalMessageDialog(null,
 					"Title does not follow Alphanumeric protocol");
+=======
+		if(db.getInStock(title) > 0) {
+			db.deleteBook(title, Integer.parseInt(amount.getText()), 0);
+			JOptionPane.showInternalMessageDialog(null, "book(s) have been deleted");
+>>>>>>> main
 		}
 
 	}
