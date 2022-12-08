@@ -13,6 +13,7 @@ public class BorrowTimer {
 
 
     public String borrowForTime(int days){
+        cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_MONTH, days);
         return sdf.format(cal.getTime());
     }

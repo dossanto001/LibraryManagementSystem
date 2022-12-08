@@ -48,10 +48,9 @@ public class JfxConnector {
 	@FXML
 	public void deleteBookButton() throws SQLException {
 		String title = nameOfBook.getText();
-<<<<<<< feature/9-pattern-checking
 		if(pt.checkAlphaNumeric(title)){
 			if(db.getInStock(title) > 0) {
-				db.deleteBook(title, Integer.parseInt(amount.getText()));
+				db.deleteBook(title, Integer.parseInt(amount.getText()),3);
 				JOptionPane.showInternalMessageDialog(null, "book(s) have been deleted");
 			}
 			else
@@ -60,11 +59,6 @@ public class JfxConnector {
 		}else{
 			JOptionPane.showInternalMessageDialog(null,
 					"Title does not follow Alphanumeric protocol");
-=======
-		if(db.getInStock(title) > 0) {
-			db.deleteBook(title, Integer.parseInt(amount.getText()), 0);
-			JOptionPane.showInternalMessageDialog(null, "book(s) have been deleted");
->>>>>>> main
 		}
 
 	}

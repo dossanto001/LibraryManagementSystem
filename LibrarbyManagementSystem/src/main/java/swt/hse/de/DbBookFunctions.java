@@ -9,11 +9,12 @@ public class DbBookFunctions {
     public static boolean createBook(Book book, DbConnector dbConnector) throws SQLException {
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
         if (dbConnector.bookExisting(book.getTitle())) {
-            dbConnector.setQuery("UPDATE library.books SET title='" + book.getTitle() + "', author='" + book.getAuthor() +
+            dbConnector.setQuery("UPDATE books SET title='" + book.getTitle() + "', author='" + book.getAuthor() +
                     "', year='" + book.getYear() + "', edition='" + book.getEdition() + "', publisher='" +
                     book.getPublisher() + "', instock='"+ book.getInStock() + "'");
         } else {
-            dbConnector.setQuery("INSERT INTO library.books (title, author, year, edition, publisher, inStock, bookAvailable, borrowCount, rating) "
+            dbConnector.setQuery("INSERT INTO books" +
+                    " (title, author, year, edition, publisher, inStock, bookAvailable, borrowCount, rating) "
                     + "VALUES ('" + book.getTitle() + "','" + book.getAuthor() + "','" + book.getYear() + "','" + book.getEdition() + "','" + book.getPublisher() + "','"
                     + book.getInStock() + "',0 ,0 ,0);");
         }
@@ -26,7 +27,8 @@ public class DbBookFunctions {
     public static int getValuesFromBook(String selectValue, String title, DbConnector dbConnector) throws SQLException {
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
         dbConnector.setStatement(DbConnector.getConnection().createStatement());
-        DbConnector.setResSet(dbConnector.getStatement().executeQuery("SELECT " + selectValue + " FROM library.books WHERE title='" + title + "';"));
+        DbConnector.setResSet(dbConnector.getStatement().executeQuery("SELECT " + selectValue + " FROM books" +
+                " WHERE title='" + title + "';"));
         int queryResult = 187;
         while (DbConnector.getResSet().next())
             queryResult = DbConnector.getResSet().getInt(selectValue);
@@ -39,12 +41,14 @@ public class DbBookFunctions {
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
         dbConnector.setStatement(DbConnector.getConnection().createStatement());
         if (dbConnector.getBookAvailable(title) == 0 && dbConnector.getInStock(title) != 1) {
-            query = "UPDATE library.books SET borrowCount = borrowCount + 1, inStock = inStock -1 " + "WHERE title='"
+            query = "UPDATE books" +
+                    " SET borrowCount = borrowCount + 1, inStock = inStock -1 " + "WHERE title='"
                     + title + "' AND NOT inStock = 0;";
             dbConnector.addBorrowInformation(nameOfCustomer, title);
             status = true;
         } else if (dbConnector.getBookAvailable(title) == 0 && dbConnector.getInStock(title) == 1) {
-            query = "UPDATE library.books SET borrowCount = borrowCount + 1, inStock = inStock -1, bookAvailable = 0 "
+            query = "UPDATE books" +
+                    " SET borrowCount = borrowCount + 1, inStock = inStock -1, bookAvailable = 0 "
                     + "WHERE title='" + title + "' AND NOT inStock = 0 ;";
             dbConnector.addBorrowInformation(nameOfCustomer, title);
             status = true;
@@ -61,7 +65,8 @@ public class DbBookFunctions {
         int count = dbConnector.getBorrowCount(title);
         double newRating = (oldRating * ((double) count - 1.0) + rating) / (double) count;
 
-        String q = "UPDATE library.books SET inStock = inStock + 1, rating = '" + newRating + "' WHERE title='" + title
+        String q = "UPDATE books" +
+                " SET inStock = inStock + 1, rating = '" + newRating + "' WHERE title='" + title
                 + "';";
         dbConnector.returnBookInformation(nameOfCustomer, title);
         dbConnector.setStatement(DbConnector.getConnection().createStatement());
@@ -79,10 +84,12 @@ public class DbBookFunctions {
         }
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
         if (dbConnector.getBookAvailable(title) == 0) {
-            dbConnector.setQuery("UPDATE library.books SET inStock = inStock - '" + amount + "' WHERE title= '" + title + "';");
+            dbConnector.setQuery("UPDATE books" +
+                    " SET inStock = inStock - '" + amount + "' WHERE title= '" + title + "';");
             dbConnector.setStatement(DbConnector.getConnection().createStatement());
             dbConnector.getStatement().executeUpdate(dbConnector.getQuery());
-            dbConnector.setQuery("UPDATE library.books SET inStock= 0 WHERE inStock < 0;");
+            dbConnector.setQuery("UPDATE books" +
+                    " SET inStock= 0 WHERE inStock < 0;");
             dbConnector.setStatement(DbConnector.getConnection().createStatement());
             dbConnector.getStatement().executeUpdate(dbConnector.getQuery());
             dbConnector.closeConnectionToDatabase();
@@ -96,7 +103,8 @@ public class DbBookFunctions {
     public static String printBookList(DbConnector dbConnector) throws SQLException {
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
         dbConnector.setStatement(DbConnector.getConnection().createStatement());
-        DbConnector.setResSet(dbConnector.getStatement().executeQuery("SELECT * FROM library.books"));
+        DbConnector.setResSet(dbConnector.getStatement().executeQuery("SELECT * FROM books" +
+                ""));
         String resultOfQuery = "Book Title\t\tAmount stocked\t\t Rating\n";
         while (DbConnector.getResSet().next())
             resultOfQuery += DbConnector.getResSet().getString("title") + "   \t\t" + DbConnector.getResSet().getString("inStock") + " \t"
@@ -107,7 +115,8 @@ public class DbBookFunctions {
     public static boolean bookExisting(String name, DbConnector dbConnector) throws SQLException {
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
         dbConnector.setStatement(DbConnector.getConnection().createStatement());
-        DbConnector.setResSet(dbConnector.getStatement().executeQuery("SELECT * FROM library.books"));
+        DbConnector.setResSet(dbConnector.getStatement().executeQuery("SELECT * FROM books" +
+                ""));
         String resultOfQuery = "Book Title\t\tAmount stocked\t\t Rating\n";
         while (DbConnector.getResSet().next())
             if (name.equals(DbConnector.getResSet().getString("title")))
@@ -119,7 +128,8 @@ public class DbBookFunctions {
         try {
             DbConnector.setConnection(dbc.createConnectionToDatabase(dbc.getRoot(), dbc.getRootPassword()));
             dbc.setStatement(DbConnector.getConnection().createStatement());
-            dbc.getStatement().executeUpdate("truncate library.books;");
+            dbc.getStatement().executeUpdate("truncate books" +
+                    ";");
         } catch (Exception e) {
             e.printStackTrace();
         }

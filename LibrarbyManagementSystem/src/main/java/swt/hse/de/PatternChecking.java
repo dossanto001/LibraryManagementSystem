@@ -3,8 +3,8 @@ package swt.hse.de;
 public class PatternChecking {
 
     private String numberRegexPattern = "[+-]?([0-9]*[.])?[0-9]+";
-    private String letterRegexPattern = "^[a-zA-Z]*$";
-    private String alphaNumericRegexPattern = "^[a-zA-Z0-9]*$";
+    private String letterRegexPattern = "^[a-zA-Z\\s]*$";
+    private String alphaNumericRegexPattern = "^[a-zA-Z0-9\\s]*$";
 
 
     public boolean checkNumber(String number){
