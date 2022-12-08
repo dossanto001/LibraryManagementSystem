@@ -23,15 +23,17 @@ public class TestDbConnector {
 //	private DbConnector mock = new DbConnector();
 
 	private DbConnector db;
-	IDbConnector dbI;
+	private IDbConnector dbI;
+	private DbBookFunctions dbF;
 
 	@Before
 	public void setUp() {
 		db = new DbConnector();
+		dbF = new DbBookFunctions();
 	}
 
 	@Test
-	public void testConnectionFail() throws SQLException  {
+	public void testConnectionFail() {
 		assertNull(db.createConnectionToDatabase("wrong", "pw"));
 	}
 
@@ -61,17 +63,17 @@ public class TestDbConnector {
 	@Test
 	public void testDeleteBookTrue() throws SQLException{
 		db.createBook(new Book("name", "auth", 1222, 2, "pub", 0));
-		assertTrue(db.deleteBook("name", 1, 0));
+		assertTrue(dbF.deleteBook("name", 1, db, 0));
 	}
 
 	@Test
 	public void testDeleteBookDecline() throws SQLException{
-		assertFalse(db.deleteBook("name", 1, 1));
+		assertFalse(dbF.deleteBook("name", 1, db, 1));
 	}
 
 	@Test
 	public void testDeleteBookFail() throws SQLException  {
-		assertFalse(db.deleteBook("no book with this name", 1, 0));
+		assertFalse(dbF.deleteBook("doesntExist", 1, db, 0));
 	}
 
 	@Test

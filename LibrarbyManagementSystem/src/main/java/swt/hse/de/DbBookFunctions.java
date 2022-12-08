@@ -11,7 +11,7 @@ public class DbBookFunctions {
         if (dbConnector.bookExisting(book.getTitle())) {
             dbConnector.setQuery("UPDATE library.books SET title='" + book.getTitle() + "', author='" + book.getAuthor() +
                     "', year='" + book.getYear() + "', edition='" + book.getEdition() + "', publisher='" +
-                    book.getPublisher() + "', instock='"+ book.getInStock() + "'");
+                    book.getPublisher() + "', instock='"+ book.getInStock() + "' WHERE title='"+ book.getTitle()+"';");
         } else {
             dbConnector.setQuery("INSERT INTO library.books (title, author, year, edition, publisher, inStock, bookAvailable, borrowCount, rating) "
                     + "VALUES ('" + book.getTitle() + "','" + book.getAuthor() + "','" + book.getYear() + "','" + book.getEdition() + "','" + book.getPublisher() + "','"
@@ -78,7 +78,7 @@ public class DbBookFunctions {
             return false;
         }
         DbConnector.setConnection(dbConnector.createConnectionToDatabase(dbConnector.getRoot(), dbConnector.getRootPassword()));
-        if (dbConnector.getBookAvailable(title) == 0) {
+        if (dbConnector.getBookAvailable(title) == 0 && option == 0) {
             dbConnector.setQuery("UPDATE library.books SET inStock = inStock - '" + amount + "' WHERE title= '" + title + "';");
             dbConnector.setStatement(DbConnector.getConnection().createStatement());
             dbConnector.getStatement().executeUpdate(dbConnector.getQuery());

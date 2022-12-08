@@ -66,7 +66,7 @@ public class DbConnector implements IDbConnector {
 
 	@Override
 	public boolean deleteBook(String title, int amount, int option) throws SQLException {
-		return dbF.deleteBook(title, amount, this, option);
+		return dbF.deleteBook(title, amount, this, 3);
 	}
 
 	@Override
