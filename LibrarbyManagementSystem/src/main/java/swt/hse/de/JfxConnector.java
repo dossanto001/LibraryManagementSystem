@@ -16,6 +16,8 @@ public class JfxConnector {
 	
 	IDbConnector db = new DbConnector();
 	BorrowTimer bt = new BorrowTimer();
+
+	PatternChecking pt = new PatternChecking();
 	
 	@FXML
 	public TextArea booksInStock = new TextArea();
@@ -46,22 +48,42 @@ public class JfxConnector {
 	@FXML
 	public void deleteBookButton() throws SQLException {
 		String title = nameOfBook.getText();
+<<<<<<< feature/9-pattern-checking
+		if(pt.checkAlphaNumeric(title)){
+			if(db.getInStock(title) > 0) {
+				db.deleteBook(title, Integer.parseInt(amount.getText()));
+				JOptionPane.showInternalMessageDialog(null, "book(s) have been deleted");
+			}
+			else
+				JOptionPane.showInternalMessageDialog(null, "No books left to delete");
+			searchBook.setText(db.printBookList());
+		}else{
+			JOptionPane.showInternalMessageDialog(null,
+					"Title does not follow Alphanumeric protocol");
+=======
 		if(db.getInStock(title) > 0) {
 			db.deleteBook(title, Integer.parseInt(amount.getText()), 0);
 			JOptionPane.showInternalMessageDialog(null, "book(s) have been deleted");
+>>>>>>> main
 		}
-		else
-			JOptionPane.showInternalMessageDialog(null, "No books left to delete");
-		searchBook.setText(db.printBookList());
+
 	}
 
 	@FXML
 	public void addBookButton() throws SQLException {
 		Book book = new Book(nameOfBook.getText(), author.getText(), year.getText(),
 				edition.getText(), publisher.getText(), numberInStock.getText());
-		db.createBook(book);
-		JOptionPane.showInternalMessageDialog(null, "book(s) have been added");
-		searchBook.setText(db.printBookList());
+		if(pt.checkAlphaNumeric(book.getTitle()) && pt.checkWord(book.getAuthor())
+				&& pt.checkYear(year.getText()) && pt.checkNumber(edition.getText())
+				&& pt.checkAlphaNumeric(book.getPublisher()) && pt.checkNumber(numberInStock.getText())){
+			db.createBook(book);
+			JOptionPane.showInternalMessageDialog(null, "book(s) have been added");
+			searchBook.setText(db.printBookList());
+		}else{
+			JOptionPane.showInternalMessageDialog(null,
+					"Incorrect pattern for book addition ");
+		}
+
 	}
 
 	@FXML
@@ -81,21 +103,26 @@ public class JfxConnector {
 	}
 	
 	public void returnBookButton() throws SQLException, ParseException {
-		if(db.alreadyBorrowed(nameOfBook.getText(), nameOfCustomer.getText())){
-			String dueDate = db.getDueDate(nameOfCustomer.getText(), nameOfBook.getText());
-			boolean isPastDue = db.isOnTime(nameOfCustomer.getText(), nameOfBook.getText());
-			db.returnBook(nameOfBook.getText(), Double.parseDouble(rating.getText()), nameOfCustomer.getText());
-			if(isPastDue){
-				JOptionPane.showInternalMessageDialog(null, "Book has been returned on time.");
-			} else {
-				JOptionPane.showInternalMessageDialog(null, "Book is late. Book was due on "
-						+ dueDate + " A late fee of $100 will be owed");
-			}
+		if(pt.checkNumber(rating.getText())){
+			if(db.alreadyBorrowed(nameOfBook.getText(), nameOfCustomer.getText())){
+				String dueDate = db.getDueDate(nameOfCustomer.getText(), nameOfBook.getText());
+				boolean isPastDue = db.isOnTime(nameOfCustomer.getText(), nameOfBook.getText());
+				db.returnBook(nameOfBook.getText(), Double.parseDouble(rating.getText()), nameOfCustomer.getText());
+				if(isPastDue){
+					JOptionPane.showInternalMessageDialog(null, "Book has been returned on time.");
+				} else {
+					JOptionPane.showInternalMessageDialog(null, "Book is late. Book was due on "
+							+ dueDate + " A late fee of $100 will be owed");
+				}
 
-			searchBook.setText(db.printBookList());
-		} else {
-			JOptionPane.showInternalMessageDialog(null, "This book is not currently borrowed by " + nameOfCustomer.getText());
+				searchBook.setText(db.printBookList());
+			} else {
+				JOptionPane.showInternalMessageDialog(null, "This book is not currently borrowed by " + nameOfCustomer.getText());
+			}
+		}else{
+			JOptionPane.showInternalMessageDialog(null, "Incorrect rating pattern. Please try again");
 		}
+
 
 		return;
 	}

@@ -46,17 +46,21 @@ public class TestDbConnector {
 		db.closeConnectionToDatabase();
 	}
 
-	@Test
+	/*@Test
 	public void testCreateBook() throws SQLException  {
 		db.truncateTable();
 		assertTrue(db.createBook(new Book("name3", "auth", 1222, 2, "pub", 0)));
 	}
+
+
 
 	@Test
 	public void testCreateExistingBook() throws SQLException {
 		db.createBook(new Book("name2", "auth", 1222, 2, "pub", 0));
 		assertTrue(db.createBook(new Book("name2", "auth", 1222, 3, "pub", 2)));
 	}
+
+	 */
 
 	@Test
 	public void testDeleteBookTrue() throws SQLException{
